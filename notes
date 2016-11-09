@@ -1,0 +1,7 @@
+//kind of like node school format
+//make this into a dictionary where they can search in the terminal 
+//use yargs to store and retrieve the info
+
+//On front end:
+//would like to make an instantaneous search method that will give suggestions(have done this before. Double-check on Udemy)
+
