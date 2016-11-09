@@ -1,3 +1,10 @@
+'use strict';
+
+// Testing to see if the transpile is working
+let myVar = "Zach";
+document.write(`Hello ${myVar}!`);
+
+
 console.log("Starting program.");
 
 //Nodepedia TM
