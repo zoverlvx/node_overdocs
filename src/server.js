@@ -1,72 +1,52 @@
+//mongoDB later
+
+
+//set up server w/ express - I think that's done
+//set up urls with express - I think that's done
+//use bodyparser for json (read docs) - I believe this is done
+//use objects for words, defs, etc --- not sure how to go about this now. 
+
 'use strict';
 
-// Testing to see if the transpile is working
-let myVar = "Zach";
-document.write(`Hello ${myVar}!`);
+const express = require('express');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+const app = express();
+const router = express.Router();
+const PORT = process.env.PORT || 3000;
+//const M = require('mongoose');
+const Word = require('../entries/words');
 
+console.log('Starting program.');
 
-console.log("Starting program.");
+app.use(bodyParser.json());
+app.use(express.static('../public'));
 
-//Nodepedia TM
-
-const storage = require("node-persist");
-storage.initSync();
-
-const argv = require('yargs')
-.command('create', 'Creates a new word for the dictionary.', (yargs) => {
-    yargs.options({
-        word_name: {
-            demand: true,
-            alias: 'word',
-            type: 'string',
-            description: 'This is a word in the dictionary.'
-        },
-        definition: {
-            demand: true,
-            alias: 'define',
-            type: 'string',
-            description: 'This is the definition of the word.'
-        },
-        example: {
-            demand: true,
-            alias: 'eg',
-            type: 'string',
-            description: 'This is an example of the word in use.'
+router.get('../entries/:_id', (req, res) => {
+    Word.findOne({_id: req.params._id}), (err, words) => {
+        if (err) {
+            return res.status(500).json({
+                message: 'Definition not found'
+            });
         }
-    }).help('help');
-})
-.command('find', 'Finds word by name.', (yargs) => {
-    yargs.options({
-         word_name: {
-            demand: true,
-            alias: 'word',
-            type: 'string',
-            description: 'This is a word in the dictionary.'
-        },
-        definition: {
-            demand: true,
-            alias: 'define',
-            type: 'string',
-            description: 'This is the definition of the word.'
-        },
-        example: {
-            demand: true,
-            alias: 'eg',
-            type: 'string',
-            description: 'This is an example of the word in use.'
+        res.json(words);
+    }
+});
+
+router.get('/entries', (req, res) => {
+    Word.find((err, words) => {
+        if(err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
         }
-    }).help('help');
-})
-.help('help')
-.argv; // No idea what .argv is doing
-let command = argv._[0]; // Can't remember what this does
+        res.json(words);
+    });
+});
 
-//console.log(argv);
+// I don't think I need a post because the user isn't submitting anything
+// I need a way to clear the page/refresh for the next word
 
-if (argv._[0] === 'hello'){ // trying to think of a way to make this into
-// a 'terminal search input' so that the user can put in a function/word and the 
-//program will retrieve it and print it to console
-	console.log("Hello World!")
-}
-//is it a crazy idea to perhaps make a dictionary that is available from
-//the backend (with node) as well as the front end (with the use of react.js)?
+app.listen(PORT, () => {
+   console.log(`Express listening on port ${PORT}`); 
+});

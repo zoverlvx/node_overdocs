@@ -1,9 +1,8 @@
 'use strict';
 
-// Testing to see if the transpile is working
-
-var myVar = "Zach";
-document.write("Hello " + myVar + "!");
+var express = require('express');
+var app = express();
+var PORT = process.env.PORT || 3000;
 
 console.log("Starting program.");
 
@@ -67,4 +66,10 @@ if (argv._[0] === 'hello') {
 }
 //is it a crazy idea to perhaps make a dictionary that is available from
 //the backend (with node) as well as the front end (with the use of react.js)?
+
+app.use(express.static('../public'));
+
+app.listen(PORT, function () {
+    console.log('Express listening on port ' + PORT + '!');
+});
 //# sourceMappingURL=server.js.map
