@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Node OverDocs</title>
@@ -8,21 +9,46 @@
 I might prefer this one-->
     <link href="style/style.css" rel="stylesheet">
     <script type="text/javascript" src="dist/server.js"></script>
-    
+
 </head>
+
 <body>
-    <h1>Node OverDocs</h1>
+    <h1>OverDocs</h1>
     <h3>The Doc of docs</h3>
-    <!--options: node libraries-->
-    
-    <!--React will take over here-->
-    <!--Dependent on node libraries for search??? good idea?-->
-    <form>
-        <input type="text" name="search_bar"/> 
-        <input type="submit" value="Submit"/>
+    <h4>Your database for how to code.</h4>
+                                                <!--Use React?-->
+    <form action="select">
+        <select>
+        <option value="general_search">
+           General Search
+       </option>
+       <option>
+           Underscore
+       </option>
+       </select>
     </form>
-    <!--React will take over here-->
+    <p>Add your library here.</p>
+    <form>
+        <input type="text" name="lib_input" />
+        <input type="submit" value="Submit" />
+    </form>
+    <p>Add the name of the code</p>
+    <!--add form, etc-->
+    <p>Add an example of the code in use</p>
+    <!--add form, etc-->
+    <p>Add a description or an explanation for the code in use</p>
+    <!--add form, etc-->
+
+<div>
+        <form>
+        <input type="text" name="search_bar" />
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+
     
-    
+
+
 </body>
+
 </html>

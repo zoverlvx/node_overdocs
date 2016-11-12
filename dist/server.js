@@ -1,75 +1,34 @@
+//implement CRUD 
+
 'use strict';
 
 var express = require('express');
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json();
 var app = express();
 var PORT = process.env.PORT || 3000;
+var mongoose = require('mongoose');
+var router = require('./router');
 
-console.log("Starting program.");
+app.use('/', router);
 
-//Nodepedia TM
+console.log('Starting program.');
+console.log(express.Router);
 
-var storage = require("node-persist");
-storage.initSync();
-
-var argv = require('yargs').command('create', 'Creates a new word for the dictionary.', function (yargs) {
-    yargs.options({
-        word_name: {
-            demand: true,
-            alias: 'word',
-            type: 'string',
-            description: 'This is a word in the dictionary.'
-        },
-        definition: {
-            demand: true,
-            alias: 'define',
-            type: 'string',
-            description: 'This is the definition of the word.'
-        },
-        example: {
-            demand: true,
-            alias: 'eg',
-            type: 'string',
-            description: 'This is an example of the word in use.'
-        }
-    }).help('help');
-}).command('find', 'Finds word by name.', function (yargs) {
-    yargs.options({
-        word_name: {
-            demand: true,
-            alias: 'word',
-            type: 'string',
-            description: 'This is a word in the dictionary.'
-        },
-        definition: {
-            demand: true,
-            alias: 'define',
-            type: 'string',
-            description: 'This is the definition of the word.'
-        },
-        example: {
-            demand: true,
-            alias: 'eg',
-            type: 'string',
-            description: 'This is an example of the word in use.'
-        }
-    }).help('help');
-}).help('help').argv; // No idea what .argv is doing
-var command = argv._[0]; // Can't remember what this does
-
-//console.log(argv);
-
-if (argv._[0] === 'hello') {
-    // trying to think of a way to make this into
-    // a 'terminal search input' so that the user can put in a function/word and the 
-    //program will retrieve it and print it to console
-    console.log("Hello World!");
-}
-//is it a crazy idea to perhaps make a dictionary that is available from
-//the backend (with node) as well as the front end (with the use of react.js)?
-
+app.use(bodyParser.json());
 app.use(express.static('../public'));
 
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/dictionary');
+
+mongoose.connection.on('error', function (err) {
+   console.err('Could not connect. Error:', err);
+});
+
+// I don't think I need a post because the user isn't submitting anything
+// I need a way to clear the page/refresh for the next word
+
 app.listen(PORT, function () {
-    console.log('Express listening on port ' + PORT + '!');
+   console.log('Express listening on port ' + PORT);
 });
 //# sourceMappingURL=server.js.map
