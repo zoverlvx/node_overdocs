@@ -18,6 +18,7 @@ console.log('Starting program.');
 
 app.use(bodyParser.json());
 app.use(express.static('../public'));
+app.use(express.static('../node_modules'));
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/dictionary');

@@ -63,4 +63,4 @@ router.delete('/entries/:_id', (req, res) => {
 });
 
 module.exports = router;
-module.exports = Entries;
+//module.exports = Entries;
