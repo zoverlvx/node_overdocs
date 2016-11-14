@@ -18,7 +18,7 @@ I might prefer this one-->
     <h4>Your database for how to code.</h4>
             
     <h5>Here's your list of libraries to choose from:</h5>        
-    <form action="select">
+    <form action="select" id="library_drop">
         <select>
        <option>
            Underscore
@@ -28,7 +28,7 @@ I might prefer this one-->
     
     <div id="hidden">
         <h5>Methods:</h5> 
-        <form action="select">
+        <form action="select" id="method_drop">
             <!--<select>-->
             <!--    <option>-->
                     <!--Append jQuery-->
@@ -45,20 +45,20 @@ I might prefer this one-->
     
     <h5>Add your library's name here.</h5>
     <form>
-        <input type="text" name="lib_name" />
+        <input type="text" name="lib_name" id="lib_id"/>
         <input type="submit" value="Submit" />
     </form>
     
-    <h5>Add a method to your library.</h5>
+    <h5>Type a method of the library here:</h5>
     <form>
         <input type="text" name="method_name" />
-        <input type="submit" value="Submit" />
-    </form>
+    <!--    <input type="submit" value="Submit" />-->
+    <!--</form>-->
     
 <h5>Now add an example of the method or a description:</h5>
-<form>
+<!--<form id="text_id">-->
     <textarea rows="4" cols="50"></textarea>
-    <button type="submit">Submit Code</button>
+    <button type="submit">Submit Method</button>
 </form>
 
 
