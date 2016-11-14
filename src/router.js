@@ -2,13 +2,13 @@
 
 const express = require("express");
 const router = express.Router();
-const Word = require('../entries/words');
+const Entries = require('../entries/words');
 const _ = require('underscore');
 let nextId_lib = 1;
 let nextId_code = 1;
 
 router.get('/entries', (req, res) => {
-    Word.find((err, words) => {
+    Entries.find((err, words) => {
         if(err) {
             return res.status(500).json({
                 message: 'Internal Server Error'
@@ -19,7 +19,7 @@ router.get('/entries', (req, res) => {
 });
 
 router.get('/entries/:_id', (req, res) => { // 
-    Word.findOne({_id: req.params._id}), (err, words) => {
+    Entries.findOne({_id: req.params._id}), (err, words) => {
         if (err) {
             return res.status(500).json({
                 message: 'Definition not found'
@@ -62,4 +62,5 @@ router.delete('/entries/:_id', (req, res) => {
     
 });
 
-module.exports = router
+module.exports = router;
+module.exports = Entries;
