@@ -14,7 +14,7 @@ const _ = require('underscore');
 app.use('/', router)
 
 console.log('Starting program.');
-console.log(express.Router);
+//console.log(express.Router);
 
 app.use(bodyParser.json());
 app.use(express.static('../public'));
@@ -23,11 +23,11 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/dictionary');
 
 mongoose.connection.on('error', err => {
-    console.err('Could not connect. Error:', err);
+    console.log('Could not connect. Error:', err);
 });
 
 
 app.listen(PORT, () => {
    console.log(`Express listening on port ${PORT}`); 
 });
-
+ 

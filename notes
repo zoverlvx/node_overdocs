@@ -1,8 +1,0 @@
-// This project is for the user to store information about Node Libraries.
-// 1. They can add the name of the library
-// 2a. They can add the name of a method/function in the library
-// 2b. They can add example code of the method/function
-// 2c. They can add notes/description of what the method/function does
-// 3. They can perform a general search or a specific search in said library
-
-// Maybe use React to create instantaneous search bar

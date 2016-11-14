@@ -7,10 +7,6 @@ const _ = require('underscore');
 let nextId_lib = 1;
 let nextId_code = 1;
 
-router.get('/', (req, res) => {
-    res.send('API Root');
-});
-
 router.get('/entries', (req, res) => {
     Word.find((err, words) => {
         if(err) {
@@ -22,7 +18,7 @@ router.get('/entries', (req, res) => {
     });
 });
 
-router.get('/entries/:_id', (req, res) => {
+router.get('/entries/:_id', (req, res) => { // 
     Word.findOne({_id: req.params._id}), (err, words) => {
         if (err) {
             return res.status(500).json({
@@ -42,7 +38,9 @@ router.post('/entries', (req, res) => {
     
     body.description = body.description.trim();
     
-    body.id_of_library = nextId_lib++;
+    body.id_of_library = nextId_lib++; // I think this needs to be a separate post b/c 
+    // I'm adding the name of the library, then a name of the method, then an example of the method, and a description
+    // 
     body.id = nextId_code++;
     
     // Need some way to push/add props to the object?
@@ -51,6 +49,9 @@ router.post('/entries', (req, res) => {
 });
 
 router.put('/entries/:_id', (req, res) => {
+    let nameId = parseInt(req.params.id, 10);
+    //counter for the library id?
+    let matchedNameId = _.findWhere()
     
 });
 

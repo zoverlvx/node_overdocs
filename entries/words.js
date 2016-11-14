@@ -2,22 +2,22 @@
 
 const mongoose = require('mongoose');
 
-let wordSchema = new mongoose.Schema({
-    word: {
-        type: String,
-        required: true
+let entrySchema = new mongoose.Schema({
+    entry: {
+        library: {
+            name_of_library: String,
+            // id_of_library: ObjectId, ???
+            contents: String
+            
+        }
     }
-
 });
 
-let Word = mongoose.model('Word', wordSchema);
+let mongooseModel = mongoose.model('entrySchema', entrySchema);
 
-module.exports = Word;
+module.exports = entrySchema;
 
-//Where are the words and definitions going to be written?
-
-let library = {
-    code_library: {
+let code_library = {
         name_of_library: 'Underscore',
         id_of_library: '',
         content: {
@@ -29,4 +29,4 @@ let library = {
             }
         }
     }
-}
+
