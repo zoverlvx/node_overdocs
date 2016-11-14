@@ -1,5 +1,6 @@
 'use strict';
+/* global $ */
 
-// $(document).ready(() => {
+$(document).ready(() => {
     
-// });
+});
