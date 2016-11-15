@@ -1,5 +1,3 @@
-//implement CRUD 
-
 'use strict';
 
 const express = require('express');
@@ -23,8 +21,8 @@ app.use(express.static('../node_modules'));
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/dictionary');
 
-mongoose.connection.on('error', err => {
-    console.log('Could not connect. Error:', err);
+mongoose.connection.on('error', error => {
+    console.log('Could not connect. Error:', error);
 });
 
 

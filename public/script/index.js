@@ -1,26 +1,42 @@
 'use strict';
 /* global $ */
 
-let enterLibName = (event) => {
-    let libtextbox = $('#lib_id');
-    libtextbox.val();
-    event.preventDefault();
+function enterLibName() {
 
-    if (!$.trim(libtextbox.val())) {
+    $('#lib_id').submit((event) => {
+        let libval = $('#lib_id').val();
+        event.preventDefault();
+
+    if (!$.trim(libval)) {
         alert('Please enter the name of the library');
-
     }
     else {
+        $('#library_drop').appendTo('#lib_select').html('<option>' + libval + '</option>');
         // store libtextbox.val(); in MongoDB
         // append libtextbox.val(); as <option> on #library_drop
     }
-};
+    
+    });
+
+console.log(libval); 
+
+}
+
+// submit value
+// check value to make sure it's a string
+// append value to dropdown
+// add value to MongoDB
+
+
+
+
+
 
 let enterMethodName = (event) => {
     let methodtextbox = $('#method_drop');
     methodtextbox.val();
     event.preventDefault();
-    
+
     // if () {} // From the looks of it, it seems like a library is always going to be chosen. So, if that library is chosen then the method name is stored under that library name 
 };
 
@@ -28,7 +44,7 @@ let enterDescription = (event) => {
     let descrtextbox = $('#text_id');
     descrtextbox.val();
     event.preventDefault();
-    
+
     // Must correspond with a method name and be submitted therewith
 };
 
@@ -57,5 +73,5 @@ function getLibrary() {
 
 $(document).ready(() => {
     getLibrary();
-    getNameOfLib();
+    enterLibName();
 });
