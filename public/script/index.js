@@ -1,24 +1,36 @@
 'use strict';
 /* global $ */
 
+// $('#mySelect').append($('<option>', {
+//     value: 1,
+//     text: 'My option'
+// }));
+
 function enterLibName() {
 
     $('#lib_id').submit((event) => {
         let libval = $('#lib_id').val();
         event.preventDefault();
+        
+        $('#lib_select').append($('<option>', {
+            value: 1,
+            text: libval
+        }));
 
-    if (!$.trim(libval)) {
-        alert('Please enter the name of the library');
-    }
-    else {
-        $('#library_drop').appendTo('#lib_select').html('<option>' + libval + '</option>');
-        // store libtextbox.val(); in MongoDB
-        // append libtextbox.val(); as <option> on #library_drop
-    }
+    // if (!$.trim(libval)) {
+    //     alert('Please enter the name of the library');
+    // }
+    // else {
+    //     $('#lib_select').append(<option> + libval + </option>);
+    //     // store libtextbox.val(); in MongoDB
+    //     // append libtextbox.val(); as <option> on #library_drop
+    // }
+    
+    console.log(libval); 
     
     });
 
-console.log(libval); 
+
 
 }
 
@@ -61,17 +73,12 @@ function getLibrary() {
             type: "GET",
         })
         .done((result) => {
-            // $('option').on('click', () => {
 
-            // });
-
-            // $().html()
-
-        })
+        });
 
 }
 
 $(document).ready(() => {
     getLibrary();
-    enterLibName();
+    //enterLibName();
 });
