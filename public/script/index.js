@@ -1,11 +1,7 @@
 'use strict';
 /* global $ */
 
-// $('#mySelect').append($('<option>', {
-//     value: 1,
-//     text: 'My option'
-// }));
-
+//POST must be used on the submit of the library name
 function enterLibName() {
 
     $('#lib_submit').submit((event) => {
@@ -13,7 +9,7 @@ function enterLibName() {
         event.preventDefault();
         console.log(libval);
 
-        if (!$.trim(libval) /* || libval already exists*/) {
+        if (!$.trim(libval) /* || libval already exists */) {
             alert('Please enter the name of the library');
         }
         else {
@@ -29,15 +25,27 @@ libval = $('#lib_name').val("");
 
 }
 
-// submit value
-// check value to make sure it's a string
-// append value to dropdown
-// add value to MongoDB
+function getLibrary() {
 
+    let request = {
+        //entries: for_entries
+    }
 
+    $.ajax({
+            url: "https://node-study-zoverlvx.c9users.io/libraries",
+            data: request,
+            //dataType: "jsonp", //use jsonp to avoid cross origin issues
+            type: "GET",
+        })
+        .done((result) => {
 
+        });
 
+}
 
+// add field of library name to database
+// on selected library from dropdown, create method name and description values and fields on submit 
+// dropdown enters object of library
 
 let enterMethodName = (event) => {
     let methodtextbox = $('#method_drop');
@@ -54,24 +62,6 @@ let enterDescription = (event) => {
 
     // Must correspond with a method name and be submitted therewith
 };
-
-function getLibrary() {
-
-    let request = {
-        //entries: for_entries
-    }
-
-    $.ajax({
-            url: "https://node-study-zoverlvx.c9users.io/entries",
-            data: request,
-            //dataType: "jsonp", //use jsonp to avoid cross origin issues
-            type: "GET",
-        })
-        .done((result) => {
-
-        });
-
-}
 
 $(document).ready(() => {
     getLibrary();

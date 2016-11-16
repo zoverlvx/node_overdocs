@@ -1,61 +1,62 @@
 'use strict';
 
 var express = require("express");
+var app = express();
 var router = express.Router();
-var Entries = require('../entries/words');
+var Libraries = require('../models/library');
 var _ = require('underscore');
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json();
 var nextId_lib = 1;
 var nextId_code = 1;
 
-router.get('/entries', function (req, res) {
-    Entries.find(function (err, words) {
+app.use(bodyParser.json());
+
+router.get('/libraries', function (req, res) {
+    Libraries.find(function (err, library_name) {
         if (err) {
             return res.status(500).json({
                 message: 'Internal Server Error'
             });
         }
-        res.json(words);
+        res.json(library_name);
     });
 });
 
-router.get('/entries/:_id', function (req, res) {
+//fix words
+router.get('/libraries/:_id', function (req, res) {
     // 
-    Entries.findOne({ _id: req.params._id }), function (err, words) {
+    Libraries.findOne({ _id: req.params._id }), function (err, library_name) {
         if (err) {
             return res.status(500).json({
-                message: 'Definition not found'
+                message: 'Library not found'
             });
         }
-        res.json(words);
+        res.json(library_name);
     };
 });
 
-router.post('/entries', function (req, res) {
-    var body = _.pick(req.body, 'name_of_library', 'name', 'code', 'description'); // in '' put in the property(s) that must be included 
+//POST
 
-    if (!_.isString(body.words) || !_.isString(body.definitions) || body.definitions.trim().length === 0) {
-        return res.status(400).send();
-    }
+router.post('/libraries', function (req, res) {
+    var body = req.body;
 
-    body.description = body.description.trim();
+    // id field?
 
-    body.id_of_library = nextId_lib++; // I think this needs to be a separate post b/c 
-    // I'm adding the name of the library, then a name of the method, then an example of the method, and a description
-    // 
-    body.id = nextId_code++;
+    console.log('description: ' + body.description);
 
-    // Need some way to push/add props to the object?
+    // push?
 
     res.json(body);
 });
 
-router.put('/entries/:_id', function (req, res) {
+router.put('/libraries/:_id', function (req, res) {
     var nameId = parseInt(req.params.id, 10);
     //counter for the library id?
     var matchedNameId = _.findWhere();
 });
 
-router.delete('/entries/:_id', function (req, res) {
+router.delete('/libraries/:_id', function (req, res) {
 
     //   if () {}
     //   else {}
@@ -63,5 +64,4 @@ router.delete('/entries/:_id', function (req, res) {
 });
 
 module.exports = router;
-//module.exports = Entries;
 //# sourceMappingURL=router.js.map

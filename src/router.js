@@ -1,61 +1,66 @@
 'use strict';
 
 const express = require("express");
+const app = express();
 const router = express.Router();
-const Entries = require('../entries/words');
+const Libraries = require('../models/library');
 const _ = require('underscore');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 let nextId_lib = 1;
 let nextId_code = 1;
 
-router.get('/entries', (req, res) => {
-    Entries.find((err, words) => {
+app.use(bodyParser.json());
+
+router.get('/libraries', (req, res) => {
+    Libraries.find((err, library_name) => {
         if(err) {
             return res.status(500).json({
                 message: 'Internal Server Error'
             });
         }
-        res.json(words);
+        res.json(library_name);
     });
 });
 
-router.get('/entries/:_id', (req, res) => { // 
-    Entries.findOne({_id: req.params._id}), (err, words) => {
+//fix words
+router.get('/libraries/:_id', (req, res) => { // 
+    Libraries.findOne({_id: req.params._id}), (err, library_name) => {
         if (err) {
             return res.status(500).json({
-                message: 'Definition not found'
+                message: 'Library not found'
             });
         }
-        res.json(words);
+        res.json(library_name);
     }
 });
 
-router.post('/entries', (req, res) => {
-  let body = _.pick(req.body, 'name_of_library', 'name', 'code', 'description'); // in '' put in the property(s) that must be included 
 
-    if (!_.isString(body.words) || !_.isString(body.definitions) || body.definitions.trim().length === 0) {
-        return res.status(400).send();
-    }
-    
-    body.description = body.description.trim();
-    
-    body.id_of_library = nextId_lib++; // I think this needs to be a separate post b/c 
-    // I'm adding the name of the library, then a name of the method, then an example of the method, and a description
-    // 
-    body.id = nextId_code++;
-    
-    // Need some way to push/add props to the object?
+
+//POST
+
+router.post('/libraries', (req, res) => {
+    let body = req.body;
+  
+  // id field?
+  
+    console.log('description: ' + body.description);
+  
+  // push?
     
     res.json(body);
 });
 
-router.put('/entries/:_id', (req, res) => {
+
+
+router.put('/libraries/:_id', (req, res) => {
     let nameId = parseInt(req.params.id, 10);
     //counter for the library id?
     let matchedNameId = _.findWhere()
     
 });
 
-router.delete('/entries/:_id', (req, res) => {
+router.delete('/libraries/:_id', (req, res) => {
    
 //   if () {}
 //   else {}
@@ -63,4 +68,3 @@ router.delete('/entries/:_id', (req, res) => {
 });
 
 module.exports = router;
-//module.exports = Entries;
