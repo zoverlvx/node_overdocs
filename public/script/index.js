@@ -8,29 +8,24 @@
 
 function enterLibName() {
 
-    $('#lib_id').submit((event) => {
-        let libval = $('#lib_id').val();
+    $('#lib_submit').submit((event) => {
+        let libval = $('#lib_name').val();
         event.preventDefault();
+        console.log(libval);
+
+        if (!$.trim(libval) /* || libval already exists*/) {
+            alert('Please enter the name of the library');
+        }
+        else {
+            $('#lib_select').append($('<option>', {
+                value: 1,
+                text: libval
+            }));
+        }
         
-        $('#lib_select').append($('<option>', {
-            value: 1,
-            text: libval
-        }));
+libval = $('#lib_name').val("");
 
-    // if (!$.trim(libval)) {
-    //     alert('Please enter the name of the library');
-    // }
-    // else {
-    //     $('#lib_select').append(<option> + libval + </option>);
-    //     // store libtextbox.val(); in MongoDB
-    //     // append libtextbox.val(); as <option> on #library_drop
-    // }
-    
-    console.log(libval); 
-    
     });
-
-
 
 }
 
@@ -80,5 +75,5 @@ function getLibrary() {
 
 $(document).ready(() => {
     getLibrary();
-    //enterLibName();
+    enterLibName();
 });
