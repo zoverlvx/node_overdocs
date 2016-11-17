@@ -3,6 +3,7 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
+const mongoose = require('mongoose');
 const Libraries = require('../models/library');
 const _ = require('underscore');
 const bodyParser = require('body-parser');
@@ -14,7 +15,7 @@ app.use(bodyParser.json());
 
 router.get('/libraries', (req, res) => {
     Libraries.find((err, library_name) => {
-        if(err) {
+        if (err) {
             return res.status(500).json({
                 message: 'Internal Server Error'
             });
@@ -23,15 +24,17 @@ router.get('/libraries', (req, res) => {
     });
 });
 
-//fix words
+
 router.get('/libraries/:_id', (req, res) => { // 
-    Libraries.findOne({_id: req.params._id}), (err, library_name) => {
+    Libraries.findOne({
+        _id: req.params._id
+    }), (err, library) => {
         if (err) {
             return res.status(500).json({
                 message: 'Library not found'
             });
         }
-        res.json(library_name);
+        res.json(library);
     }
 });
 
@@ -40,15 +43,16 @@ router.get('/libraries/:_id', (req, res) => { //
 //POST
 
 router.post('/libraries', (req, res) => {
-    let body = req.body;
-  
-  // id field?
-  
-    console.log('description: ' + body.description);
-  
-  // push?
-    
-    res.json(body);
+    Libraries.create({
+        library_name: req.body.library_name
+    }, (err, library) => {
+        if (err) {
+            return res.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        res.status(201).json(library);
+    });
 });
 
 
@@ -57,14 +61,43 @@ router.put('/libraries/:_id', (req, res) => {
     let nameId = parseInt(req.params.id, 10);
     //counter for the library id?
     let matchedNameId = _.findWhere()
-    
+
 });
 
 router.delete('/libraries/:_id', (req, res) => {
-   
-//   if () {}
-//   else {}
-    
+
+    Libraries.findByIdAndRemove(req.params._id, (err, library) => {
+        if (err) {
+            return res.status(404);
+        }
+        res.json({
+            message: 'Library deleted.'
+        })
+    });
+
 });
+
+router.use('*', function(req, res) {
+    res.status(404).json({
+        message: 'Not Found'
+    });
+});
+
+// const runServer = function(callback) {
+//     mongoose.connect(config.DATABASE_URL, function(err) {
+//         if (err && callback) {
+//             return callback(err);
+//         }
+
+//         app.listen(config.PORT, function() {
+//             console.log('Listening on localhost:' + config.PORT);
+//             if (callback) {
+//                 callback();
+//             }
+//         });
+//     });
+// };
+
+
 
 module.exports = router;

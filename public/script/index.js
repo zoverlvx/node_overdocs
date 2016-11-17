@@ -9,7 +9,7 @@ function enterLibName() {
         event.preventDefault();
         console.log(libval);
 
-        if (!$.trim(libval) /* || libval already exists */) {
+        if (!$.trim(libval) /* || libval already exists */ ) {
             alert('Please enter the name of the library');
         }
         else {
@@ -18,8 +18,8 @@ function enterLibName() {
                 text: libval
             }));
         }
-        
-libval = $('#lib_name').val("");
+
+        libval = $('#lib_name').val("");
 
     });
 
