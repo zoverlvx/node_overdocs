@@ -9,67 +9,69 @@ let libraryPro = () => {
 
 function onLibrarySubmit(event) {
     event.preventDefault();
-    let value = this.input.val().trim();
-    if (value != '') {
-        addLibrary();
-    }
-    value.val('');
-}
-
-function getLibrary() {
-
-    let request = {
-        //library_name: library_name
-    }
-
-    $.ajax({
-            url: "https://node-study-zoverlvx.c9users.io/libraries", // 
-            data: request,
-            dataType: "json", // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
-            type: "GET",
-        })
-        .done((result) => {
-            console.log(result);
+    $('#lib_submit').submit((event) => {
+            let value = this.input.val().trim();
+            if (value != '') {
+                addLibrary();
+            }
+            value.val('');
         });
+    }
 
-}
+    function getLibrary() {
 
-function addLibrary(library_name) {
-    let library_post = {
-        'library_name': library_name
-    };
-    let ajax = $.ajax('/libraries', {
-        type: 'POST',
-        data: JSON.stringify(library_name),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-    //
-}
+        let request = {
+            //library_name: library_name
+        }
 
-function updateLibrary(library_name) {
-    let library_put = {
-        'library_name': library_name._id
-    };
-    let ajax = $.ajax(`/libraries/${library_name}` , {
-                    type: 'PUT',
+        $.ajax({
+                url: "https://node-study-zoverlvx.c9users.io/libraries", // 
+                data: request,
+                dataType: "json", // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
+                type: "GET",
+            })
+            .done((result) => {
+                console.log(result);
+            });
+
+    }
+
+    function addLibrary(library_name) {
+        let library_post = {
+            'library_name': library_name
+        };
+        let ajax = $.ajax('/libraries', {
+            type: 'POST',
             data: JSON.stringify(library_name),
             dataType: 'json',
             contentType: 'application/json'
-    });
-//
-}
+        });
+        //
+    }
 
-function deleteLibrary (library_name) {
-    let ajax = $.ajax(`/libraries/${library_name}` , {
-        type: 'DELETE',
-        dataType: 'json'
-    });
-    //
-}
+    function updateLibrary(library_name) {
+        let library_put = {
+            'library_name': library_name._id
+        };
+        let ajax = $.ajax(`/libraries/${library_name}`, {
+            type: 'PUT',
+            data: JSON.stringify(library_name),
+            dataType: 'json',
+            contentType: 'application/json'
+        });
+        //
+    }
+
+    function deleteLibrary(library_name) {
+        let ajax = $.ajax(`/libraries/${library_name}`, {
+            type: 'DELETE',
+            dataType: 'json'
+        });
+        //
+    }
 
 
-    
+
 
 
     // add field of library name to database
