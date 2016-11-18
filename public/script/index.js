@@ -4,10 +4,10 @@
 let libraryPro = () => {
 
     this.form = $('#lib_submit');
-    this.form.submit(this.onAddItemSubmit.bind(this));
+    this.form.submit(this.onLibrarySubmit.bind(this));
 }
 
-function onAddItemSubmit(event) {
+function onLibrarySubmit(event) {
     event.preventDefault();
     let value = this.input.val().trim();
     if (value != '') {
