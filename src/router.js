@@ -43,6 +43,7 @@ router.get('/libraries/:_id', (req, res) => { //
 //POST
 
 router.post('/libraries', (req, res) => {
+    console.log(req.body);
     Libraries.create({
         library_name: req.body.library_name
     }, (err, library) => {
@@ -77,11 +78,11 @@ router.delete('/libraries/:_id', (req, res) => {
 
 });
 
-router.use('*', function(req, res) {
-    res.status(404).json({
-        message: 'Not Found'
-    });
-});
+// router.use('*', function(req, res) {
+//     res.status(404).json({
+//         message: 'Not Found'
+//     });
+// });
 
 // const runServer = function(callback) {
 //     mongoose.connect(config.DATABASE_URL, function(err) {

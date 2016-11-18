@@ -16,10 +16,10 @@ console.log('Starting program.');
 
 app.use(bodyParser.json());
 app.use(express.static('../public'));
-app.use(express.static('../node_modules'));
+//app.use(express.static('../node_modules'));
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/dictionary');
+mongoose.connect('mongodb://localhost/libraries');
 
 mongoose.connection.on('error', function (error) {
    console.log('Could not connect. Error:', error);
