@@ -12,11 +12,9 @@ const _ = require('underscore');
 app.use('/', router)
 
 console.log('Starting program.');
-//console.log(express.Router);
 
-app.use(bodyParser.json());
+app.use(jsonParser);
 app.use(express.static('../public'));
-//app.use(express.static('../node_modules'));
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/libraries');

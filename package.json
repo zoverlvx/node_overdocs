@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src -d dist -w -s"
   },
-  "repository": "",
+  "repository": "https://github.com/zoverlvx/node_overdocs.git",
   "author": "Zach Overhulser",
   "dependencies": {
     "body-parser": "^1.15.2",

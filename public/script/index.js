@@ -1,11 +1,11 @@
 'use strict';
 /* global $ */
 
-let libraryPro = () => {
+// let libraryPro = () => {
 
-    this.form = $('#lib_submit');
-    this.form.submit(this.onLibrarySubmit.bind(this));
-}
+//     this.form = $('#lib_submit');
+//     this.form.submit(this.onLibrarySubmit.bind(this));
+// }
 
 function onLibrarySubmit(event) {
     event.preventDefault();
@@ -18,15 +18,23 @@ function onLibrarySubmit(event) {
         });
     }
 
+    function library_dropdown(){
+        $('#library_drop').change((event) => {
+            let selectedOption = $('#library_drop option:selected');
+            // access library obj's props
+            // append drop down for methods of that library
+        })
+    }
+
     function getLibrary() {
 
         let request = {
-            //library_name: library_name
+            library_name: 'underscore'
         }
 
         $.ajax({
                 url: "https://node-study-zoverlvx.c9users.io/libraries", // 
-                data: request,
+               // data: request,
                 dataType: "json", // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
                 type: "GET",
             })
@@ -121,6 +129,7 @@ function onLibrarySubmit(event) {
     };
 
     $(document).ready(() => {
-        //getLibrary();
+        getLibrary();
+        addLibrary('underscore');
         enterLibName();
     });

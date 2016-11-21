@@ -8,10 +8,10 @@ const Libraries = require('../models/library');
 const _ = require('underscore');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-let nextId_lib = 1;
-let nextId_code = 1;
+//let nextId_lib = 1;
+//let nextId_code = 1;
 
-app.use(bodyParser.json());
+app.use(jsonParser);
 
 router.get('/libraries', (req, res) => {
     Libraries.find((err, library_name) => {
@@ -20,12 +20,12 @@ router.get('/libraries', (req, res) => {
                 message: 'Internal Server Error'
             });
         }
-        res.json(library_name);
+        res.json(library_name); // end of reading
     });
 });
 
 
-router.get('/libraries/:_id', (req, res) => { // 
+router.get('/libraries/:_id', (req, res) => { 
     Libraries.findOne({
         _id: req.params._id
     }), (err, library) => {
