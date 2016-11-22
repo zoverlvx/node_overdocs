@@ -50,7 +50,7 @@ function onLibrarySubmit(event) {
         };
         let ajax = $.ajax('/libraries', {
             type: 'POST',
-            data: JSON.stringify(library_name),
+            data: JSON.stringify(library_post),
             dataType: 'json',
             contentType: 'application/json'
         });
@@ -90,7 +90,8 @@ function onLibrarySubmit(event) {
     function enterLibName() {
 
         $('#lib_submit').submit((event) => {
-            let libval = $('#lib_name').val();
+            let i = 1;
+            let libval = $('#lib_name').val().trim();
             event.preventDefault();
             console.log(libval);
 
@@ -99,12 +100,13 @@ function onLibrarySubmit(event) {
             }
             else {
                 $('#lib_select').append($('<option>', {
-                    value: 1,
+                    value: i,
                     text: libval
                 }));
             }
 
-            libval = $('#lib_name').val("");
+            libval = $('#lib_name').val('');
+            i++;
 
         });
 
