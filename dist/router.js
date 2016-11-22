@@ -71,27 +71,5 @@ router.delete('/libraries/:_id', function (req, res) {
     });
 });
 
-// router.use('*', function(req, res) {
-//     res.status(404).json({
-//         message: 'Not Found'
-//     });
-// });
-
-// const runServer = function(callback) {
-//     mongoose.connect(config.DATABASE_URL, function(err) {
-//         if (err && callback) {
-//             return callback(err);
-//         }
-
-//         app.listen(config.PORT, function() {
-//             console.log('Listening on localhost:' + config.PORT);
-//             if (callback) {
-//                 callback();
-//             }
-//         });
-//     });
-// };
-
-
 module.exports = router;
 //# sourceMappingURL=router.js.map
