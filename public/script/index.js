@@ -1,22 +1,25 @@
 'use strict';
 /* global $ */
 
-function library_dropdown() {
-            let example = {
-            method: 'method string'
-        }
+// on submit of library, library is added to library dropdown and store in db
+// enter method name in input && enter description for method
+// on submit for method name and description store info in two separate props under the library selected in the dropdown
+// on library select, show method dropdown
+// on method dropdown select, append method and description
+
+function library_dropdown(selected_library) {
     $('#library_drop').change((event) => {
         $('#hidden').show();
         let selectedOption = $('#library_drop option:selected');
-        
+        getLibrary(selected_library)
         // need access of object
         // append drop down for methods of that library on select
-        $('#method_select').append('<option>' + example.method + '</option>')
+        $('#method_select').append('<option>' + /**/ + '</option>')
     })
 }
 
 // method drop down
-//$('#output').append('<p>Method selected:</p> \n' /**/)
+//$('#output').append('<p>Method selected:</p> \n')
 
 function getLibrary(requestedLibrary) {
     let request = {
@@ -62,7 +65,7 @@ function submitMethod(method_name, des) {
         }
         
         
-    })
+    });
     
 }
 
@@ -101,11 +104,6 @@ function deleteLibrary(library_name) {
     });
 }
 
-// add field of library name to database
-// on selected library from dropdown, create method name and description values and fields on submit 
-// dropdown enters object of library
-
-//POST must be used on the submit of the library name
 function submitLibrary() {
 
     $('#lib_submit').submit((event) => {
