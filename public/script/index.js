@@ -1,10 +1,6 @@
 'use strict';
 /* global $ */
 
-//const express = require("express");
-//const app = express();
-//const Libraries = require('../models/library');
-
 function library_dropdown() {
             let example = {
             method: 'method string'
@@ -23,7 +19,6 @@ function library_dropdown() {
 //$('#output').append('<p>Method selected:</p> \n' /**/)
 
 function getLibrary(requestedLibrary) {
-
     let request = {
         library_name: requestedLibrary //.val
     }
@@ -37,7 +32,6 @@ function getLibrary(requestedLibrary) {
         .done((result) => {
             console.log(result); //needs to put onto the DOM
         });
-
 }
 
 function addLibrary(library_name) {
@@ -50,8 +44,27 @@ function addLibrary(library_name) {
         dataType: 'json',
         contentType: 'application/json'
     });
-    //
 };
+
+function submitMethod(method_name, des) {
+    $('#method_submit').submit((event) =>
+    {
+        let i = 1;
+        let methodval = $('#method_name').val().trim();
+        let descriptionval = $('#description').val().trim();
+        event.preventDefault();
+        
+        if (!$.trim(methodval) && !$.trim(descriptionval)) {
+            alert('Please enter a method name with a description');
+        }
+        else {
+            addMethod(methodval, descriptionval)
+        }
+        
+        
+    })
+    
+}
 
 function addMethod(method_name, des) {
     let method_post = {
@@ -79,7 +92,6 @@ function updateLibrary(library_name) {
         dataType: 'json',
         contentType: 'application/json'
     });
-    //
 }
 
 function deleteLibrary(library_name) {
@@ -87,19 +99,14 @@ function deleteLibrary(library_name) {
         type: 'DELETE',
         dataType: 'json'
     });
-    //
 }
-
-
-
-
 
 // add field of library name to database
 // on selected library from dropdown, create method name and description values and fields on submit 
 // dropdown enters object of library
 
 //POST must be used on the submit of the library name
-function enterLibName() {
+function submitLibrary() {
 
     $('#lib_submit').submit((event) => {
         let i = 1;
@@ -125,15 +132,13 @@ function enterLibName() {
 
 }
 
-// enter method and description on submit dependent on library
-
 $(document).ready(() => {
     $('#hidden').hide();
+    submitLibrary();
     getLibrary();
     addLibrary();
-    enterLibName();
     library_dropdown();
 });
 
 
-//append it all to page
+
