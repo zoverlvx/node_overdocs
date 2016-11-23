@@ -7,20 +7,47 @@
 // on library select, show method dropdown
 // on method dropdown select, append method and description
 
-function library_dropdown(selected_library) {
-    $('#library_drop').change((event) => {
-        $('#hidden').show();
-        let selectedOption = $('#library_drop option:selected');
-        getLibrary(selected_library)
-        // need access of object
-        // append drop down for methods of that library on select
-        $('#method_select').append('<option>' + /**/ + '</option>')
-    })
+// added to library submit
+function addLibrary(library_name) {
+    let library_post = {
+        'library_name': library_name
+    };
+    let ajax = $.ajax('/libraries', {
+        type: 'POST',
+        data: JSON.stringify(library_post),
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+};
+
+function submitLibrary() {
+
+    $('#lib_submit').submit((event) => {
+        let i = 1;
+        let libval = $('#lib_name').val().trim();
+        event.preventDefault();
+        console.log(libval);
+
+        if (!$.trim(libval) /* || libval already exists */ ) {
+            alert('Please enter the name of the library');
+        }
+        else {
+            addLibrary(libval); // trying to get the ajax to work with the submit
+            $('#lib_select').append($('<option>', {
+                value: i,
+                text: libval
+            }));
+        }
+
+        libval = $('#lib_name').val('');
+        i++;
+
+    });
+
 }
 
-// method drop down
-//$('#output').append('<p>Method selected:</p> \n')
 
+//needs to be added to the library dropdown
 function getLibrary(requestedLibrary) {
     let request = {
         library_name: requestedLibrary //.val
@@ -37,18 +64,25 @@ function getLibrary(requestedLibrary) {
         });
 }
 
-function addLibrary(library_name) {
-    let library_post = {
-        'library_name': library_name
-    };
-    let ajax = $.ajax('/libraries', {
-        type: 'POST',
-        data: JSON.stringify(library_post),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-};
+//on selected library, must append the method dropdown
+function library_dropdown(selected_library) {
+    $('#library_drop').change((event) => {
+        $('#hidden').show();
+        selected_library = $('#library_drop option:selected');
+        getLibrary(selected_library)
+        // need access of object
+        // append drop down for methods of that library on select
+        $('#method_select').append('<option>' + /**/ + '</option>')
+    })
+}
 
+// method drop down
+//$('#output').append('<p>Method selected:</p> \n')
+
+
+
+
+//addMethod should be added to this
 function submitMethod(method_name, des) {
     $('#method_submit').submit((event) =>
     {
@@ -85,6 +119,8 @@ function addMethod(method_name, des) {
 
 };
 
+//could probably be added to library dropdown
+//on selected library, on selected method ???
 function updateLibrary(library_name) {
     let library_put = {
         'library_name': library_name._id
@@ -104,31 +140,6 @@ function deleteLibrary(library_name) {
     });
 }
 
-function submitLibrary() {
-
-    $('#lib_submit').submit((event) => {
-        let i = 1;
-        let libval = $('#lib_name').val().trim();
-        event.preventDefault();
-        console.log(libval);
-
-        if (!$.trim(libval) /* || libval already exists */ ) {
-            alert('Please enter the name of the library');
-        }
-        else {
-            addLibrary(libval); // trying to get the ajax to work with the submit
-            $('#lib_select').append($('<option>', {
-                value: i,
-                text: libval
-            }));
-        }
-
-        libval = $('#lib_name').val('');
-        i++;
-
-    });
-
-}
 
 $(document).ready(() => {
     $('#hidden').hide();
