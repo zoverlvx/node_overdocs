@@ -20,6 +20,22 @@ function addLibrary(library_name) {
     });
 };
 
+function addMethod(method_name, des) {
+    let method_post = {
+        entries: [{
+            method: method_name,
+            description: des
+        }]
+    };
+    let ajax = $.ajax('/libraries/library_name', {
+        type: 'PUT',
+        data: JSON.stringify(method_post),
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+
+};
+
 function submitLibrary() {
 
     $('#lib_submit').submit((event) => {
@@ -120,22 +136,6 @@ function submitMethod(method_name, des) {
     });
 
 }
-
-function addMethod(method_name, des) {
-    let method_post = {
-        entries: [{
-            method: method_name,
-            description: des
-        }]
-    };
-    let ajax = $.ajax('/libraries', {
-        type: 'POST',
-        data: JSON.stringify(method_post),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-
-};
 
 //could probably be added to library dropdown
 //on selected library, on selected method ???

@@ -74,6 +74,11 @@ router.put('/libraries/:_id', function (req, res) {
     var nameId = parseInt(req.params.id, 10);
     //counter for the library id?
     var matchedNameId = _.findWhere();
+    //???
+});
+
+router.put('/libraries/library_name', function (req, res) {
+    //????
 });
 
 router.delete('/libraries/:_id', function (req, res) {
