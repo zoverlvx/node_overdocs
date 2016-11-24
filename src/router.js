@@ -8,8 +8,6 @@ const Libraries = require('../models/library');
 const _ = require('underscore');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-//let nextId_lib = 1;
-//let nextId_code = 1;
 
 app.use(jsonParser);
 
@@ -20,12 +18,9 @@ router.get('/libraries', (req, res) => {
                 message: 'Internal Server Error'
             });
         }
-        res.json(library_name); // end of reading
+        res.json(library_name);
     });
 });
-
-//on request of route of libraries/library_name
-//spits out an array of entries[i].method and entries[i].description
 
 router.get('/libraries/:_id', (req, res) => { 
     Libraries.findOne({
@@ -40,6 +35,8 @@ router.get('/libraries/:_id', (req, res) => {
     }
 });
 
+//on request of route of libraries/library_name
+//spits out an array of entries[i].method and entries[i].description
 router.get('/libraries/library_name', (req, res) => {
     Libraries.findOne({
         method: req.params.method,
@@ -55,7 +52,6 @@ router.get('/libraries/library_name', (req, res) => {
 })
 
 //POST
-
 router.post('/libraries', (req, res) => {
     console.log(req.body);
     Libraries.create({
@@ -71,7 +67,7 @@ router.post('/libraries', (req, res) => {
 });
 
 
-
+//No idea what I'm doing
 router.put('/libraries/:_id', (req, res) => {
     let nameId = parseInt(req.params.id, 10);
     //counter for the library id?
@@ -82,6 +78,7 @@ router.put('/libraries/:_id', (req, res) => {
 router.put('/libraries/library_name', (req, res) => {
 //????
 })
+//
 
 // app.put('/todos/:id', (req, res) => {
 //     let todoId = parseInt(req.params.id, 10);
@@ -114,7 +111,7 @@ router.put('/libraries/library_name', (req, res) => {
 
 
 
-
+//Seems doable
 router.delete('/libraries/:_id', (req, res) => {
 
     Libraries.findByIdAndRemove(req.params._id, (err, library) => {
