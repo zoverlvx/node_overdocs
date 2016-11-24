@@ -24,6 +24,8 @@ router.get('/libraries', (req, res) => {
     });
 });
 
+//on request of route of libraries/library_name
+//spits out an array of entries[i].method and entries[i].description
 
 router.get('/libraries/:_id', (req, res) => { 
     Libraries.findOne({
@@ -37,6 +39,20 @@ router.get('/libraries/:_id', (req, res) => {
         res.json(library);
     }
 });
+
+router.get('/libraries/library_name', (req, res) => {
+    Libraries.findOne({
+        method: req.params.method,
+        description: req.params.description
+    }), (err, method) => {
+        if (err) {
+            return res.status(500).json({
+                message: 'Method not found'
+            });
+        }
+        res.json(method);
+    }
+})
 
 
 
