@@ -54,8 +54,6 @@ router.get('/libraries/library_name', (req, res) => {
     }
 })
 
-
-
 //POST
 
 router.post('/libraries', (req, res) => {
