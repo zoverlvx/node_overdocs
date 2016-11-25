@@ -126,6 +126,35 @@ router.delete('/libraries/:_id', (req, res) => {
 
 });
 
+// Code I've been hoping to glean from
+
+// router.delete('/items/:id', function(request, response){
+//     console.log(request.params);
+//     var id = request.params.id;
+    
+//         for (var i = 0; i < storage.items.length; i++){
+//             if (id == storage.items[i].id){
+//                 storage.items.splice(i, 1);
+//                 break;
+//             }
+//         }
+        
+//         console.log(storage.items);
+//         return response.json(storage.items);
+// });
+
+
+// router.delete('/libraries/library_name', (req, res) => {
+//   Libraries.findByIdAndRemove(req.params._id, (err, method) => {
+//       if (err) {
+//           return res.status(404);
+//       }
+//       res.json({
+//           message: 'Method deleted.'
+//       });
+//   }); 
+// });
+
 
 // app.delete('/todos/:id', (req, res) => {
 //     let todoId = parseInt(req.params.id, 10);

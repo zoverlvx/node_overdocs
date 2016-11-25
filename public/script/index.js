@@ -28,7 +28,7 @@ function addMethod(method_name, des) {
         }]
     };
     let ajax = $.ajax('/libraries/library_name', {
-        type: 'PUT',
+        type: 'PUT', //should this be POST or PUT?
         data: JSON.stringify(method_post),
         dataType: 'json',
         contentType: 'application/json'
