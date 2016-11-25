@@ -122,5 +122,22 @@ router.delete('/libraries/:_id', function (req, res) {
     });
 });
 
+// app.delete('/todos/:id', (req, res) => {
+//     let todoId = parseInt(req.params.id, 10);
+
+//     let matchedTodo = _.findWhere(todos, {
+//         id: todoId
+//     });
+
+//     if (!matchedTodo) {
+//         res.status(404).json({
+//             "Error": "No todo found with that id"
+//         });
+//     } else {
+//         todos = _.without(todos, matchedTodo);
+//         res.json(matchedTodo);
+//     }
+// });
+
 module.exports = router;
 //# sourceMappingURL=router.js.map

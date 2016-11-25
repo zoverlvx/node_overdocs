@@ -23,8 +23,8 @@ function addLibrary(library_name) {
 function addMethod(method_name, des) {
     let method_post = {
         entries: [{
-            method: method_name,
-            description: des
+            'method': method_name,
+            'description': des
         }]
     };
     let ajax = $.ajax('/libraries/library_name', {
@@ -96,6 +96,17 @@ function initializeLibraryDropdown() {
     });
 }
 
+// method drop down
+//$('#output').append('<p>Method selected:</p> \n')
+
+function initializeMethodDropdown() {
+    getMethod((result) => {
+        result.forEach((methodObj) => {
+            $('#method_select').append('<option>' + methodObj.method + '</option>')
+        });
+    });
+}
+
 //on selected library, must append the method dropdown
 function libraryDropdown(selected_library) {
     $('#library_drop').change((event) => {
@@ -108,13 +119,6 @@ function libraryDropdown(selected_library) {
         getMethod(selected_library);
         $('#method_select').append('<option>' + selected_library.method +'</option>')
     })
-}
-
-// method drop down
-//$('#output').append('<p>Method selected:</p> \n')
-
-function initializeMethodDropdown() {
-    
 }
 
 //addMethod should be added to this
