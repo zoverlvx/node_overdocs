@@ -22,6 +22,7 @@ router.get('/libraries', function (req, res) {
     });
 });
 
+//is this doing anything?
 router.get('/libraries/:_id', function (req, res) {
     Libraries.findOne({
         _id: req.params._id
