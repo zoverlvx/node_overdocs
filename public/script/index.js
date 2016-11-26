@@ -28,7 +28,7 @@ function addMethod(method_name, des) {
         }]
     };
     let ajax = $.ajax('/libraries/library_name', {
-        type: 'PUT', //should this be POST or PUT?
+        type: 'POST', //should this be POST or PUT?
         data: JSON.stringify(method_post),
         dataType: 'json',
         contentType: 'application/json'
@@ -60,7 +60,29 @@ function submitLibrary() {
 
     });
 
-}
+};
+
+
+//addMethod should be added to this
+function submitMethod(method_name, des) {
+    $('#method_submit').submit((event) => {
+        event.preventDefault();
+        let i = 1;
+        let methodval = $('#method_name').val().trim();
+        let descriptionval = $('#description').val()//.trim();
+        
+
+        if (!$.trim(methodval) && !$.trim(descriptionval)) {
+            alert('Please enter a method name with a description');
+        }
+        else {
+            addMethod(methodval, descriptionval)
+        }
+
+        i++;
+    });
+
+};
 
 
 function getLibrary(cbFn) {
@@ -121,26 +143,6 @@ function libraryDropdown(selected_library) {
     })
 }
 
-//addMethod should be added to this
-function submitMethod(method_name, des) {
-    $('#method_submit').submit((event) => {
-        let i = 1;
-        let methodval = $('#method_name').val().trim();
-        let descriptionval = $('#description').val().trim();
-        event.preventDefault();
-
-        if (!$.trim(methodval) && !$.trim(descriptionval)) {
-            alert('Please enter a method name with a description');
-        }
-        else {
-            addMethod(methodval, descriptionval)
-        }
-
-        i++;
-    });
-
-}
-
 //could probably be added to library dropdown
 //on selected library, on selected method ???
 function updateLibrary(library_name) {
@@ -164,9 +166,12 @@ function deleteLibrary(library_name) {
 
 
 $(document).ready(() => {
-    $('#hidden').hide();
     initializeLibraryDropdown();
+    initializeMethodDropdown();
     submitLibrary();
+    submitMethod();
+    updateLibrary();
+    deleteLibrary();
     getLibrary((result) => {
         console.log(result);
     });
