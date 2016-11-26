@@ -24,7 +24,7 @@ function addMethod(method_name, des) {
     let method_post = {
         entries: [{
             'method': method_name,
-            'description': des
+            //'description': des
         }]
     };
     let ajax = $.ajax('/libraries/library_name', {
@@ -87,8 +87,8 @@ function submitMethod(method_name, des) {
 
 function getLibrary(cbFn) {
     console.log(cbFn);
-    $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries', // 
+    $.ajax({ 
+            url: 'https://node-study-zoverlvx.c9users.io/libraries', // libraries/ + actual name of library?
             // data: request,
             dataType: 'json', // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
             type: 'GET',
@@ -163,6 +163,8 @@ function deleteLibrary(library_name) {
         dataType: 'json'
     });
 }
+
+
 
 
 $(document).ready(() => {

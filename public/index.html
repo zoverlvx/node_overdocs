@@ -53,15 +53,16 @@ I might prefer this one-->
 or to have the dropdown be the reference for the method, then have the description entered-->
 
 <h5>Type a method of the library here:</h5>
-<!--<form>--> <form id="method_submit">
-    <input type="text" name="method_name" id="method_name"/> 
-    <!--Update-->
-<!--</form>-->
+    <form id="method_submit">
+        <input type="text" name="method_name" id="method_name" />
+        <input type="submit" value="Submit" />
+    </form>
 
-    <!--<form id="method_submit">-->
-        <h5>Now add an example of the method or a description:</h5>
-        <textarea rows="4" cols="50" id="des_text"></textarea>
-        <input type="submit" value="Submit"/>
+<h5>Now add an example of the method or a description:</h5>
+    <form id="description_submit">
+        <textarea rows="4" cols="50" id="description_name">
+            </textarea>
+        <input type="submit" value="Submit" />
     </form>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
