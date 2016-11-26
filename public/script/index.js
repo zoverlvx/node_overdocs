@@ -7,7 +7,6 @@
 // on library select, show method dropdown
 // on method dropdown select, append method and description
 
-// added to library submit
 function addLibrary(library_name) {
     let library_post = {
         'library_name': library_name
@@ -18,22 +17,6 @@ function addLibrary(library_name) {
         dataType: 'json',
         contentType: 'application/json'
     });
-};
-
-function addMethod(method_name, des) {
-    let method_post = {
-        entries: [{
-            'method': method_name,
-            //'description': des
-        }]
-    };
-    let ajax = $.ajax('/libraries/library_name', {
-        type: 'POST', //should this be POST or PUT?
-        data: JSON.stringify(method_post),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-
 };
 
 function submitLibrary() {
@@ -48,7 +31,7 @@ function submitLibrary() {
             alert('Please enter the name of the library');
         }
         else {
-            addLibrary(libval); // trying to get the ajax to work with the submit
+            addLibrary(libval);
             $('#lib_select').append($('<option>', {
                 value: i,
                 text: libval
@@ -62,34 +45,10 @@ function submitLibrary() {
 
 };
 
-
-//addMethod should be added to this
-function submitMethod(method_name, des) {
-    $('#method_submit').submit((event) => {
-        event.preventDefault();
-        let i = 1;
-        let methodval = $('#method_name').val().trim();
-        let descriptionval = $('#description').val()//.trim();
-        
-
-        if (!$.trim(methodval) && !$.trim(descriptionval)) {
-            alert('Please enter a method name with a description');
-        }
-        else {
-            addMethod(methodval, descriptionval)
-        }
-
-        i++;
-    });
-
-};
-
-
 function getLibrary(cbFn) {
     console.log(cbFn);
     $.ajax({ 
             url: 'https://node-study-zoverlvx.c9users.io/libraries', // libraries/ + actual name of library?
-            // data: request,
             dataType: 'json', // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
             type: 'GET',
         })
@@ -97,6 +56,50 @@ function getLibrary(cbFn) {
             cbFn(result); 
         });
 }
+
+function initializeLibraryDropdown() {
+    getLibrary((result) => {
+        result.forEach((libraryObj) => {
+            $('#lib_select').append('<option>' + libraryObj.library_name + '</option>')
+        })
+    });
+}
+
+////// Testing Method format
+
+function addMethod(method_name) {
+    let method_post = {
+        entries: [{
+            'method': method_name
+        }]
+    };
+    let ajax = $.ajax('/libraries/library_name', {
+        type: 'POST', //should this be POST or PUT?
+        data: JSON.stringify(method_post),
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+
+};
+
+function submitMethod(method_name) {
+    $('#method_submit').submit((event) => {
+        let i = 1;
+        let methodval = $('#method_name').val().trim();
+        event.preventDefault();
+        
+
+        if (!$.trim(methodval)) {
+            alert('Please enter a method name with a description');
+        }
+        else {
+            addMethod(methodval)
+        }
+
+        i++;
+    });
+
+};
 
 function getMethod(cbFn) {
     console.log(cbFn);
@@ -110,24 +113,17 @@ function getMethod(cbFn) {
     });
 }
 
-function initializeLibraryDropdown() {
-    getLibrary((result) => {
-        result.forEach((libraryObj) => {
-            $('#lib_select').append('<option>' + libraryObj.library_name + '</option>')
-        })
-    });
-}
-
-// method drop down
-//$('#output').append('<p>Method selected:</p> \n')
-
 function initializeMethodDropdown() {
     getMethod((result) => {
         result.forEach((methodObj) => {
-            $('#method_select').append('<option>' + methodObj.method + '</option>')
+            $('#method_select').append('<option>' + methodObj.entries[0].method + '</option>')
         });
     });
 }
+
+////// Testing Method format end
+
+
 
 //on selected library, must append the method dropdown
 function libraryDropdown(selected_library) {

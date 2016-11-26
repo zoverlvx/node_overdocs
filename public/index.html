@@ -25,18 +25,15 @@ I might prefer this one-->
        <input type="submit" value="Delete"/>
     </form>
 
-    <div id="hidden">
         <h5>Methods:</h5>
         <form id="method_drop">
             <select id="method_select">
-            <!--    <option>-->
-            <!--Append jQuery-->
-            <!--    </option>-->
+
             </select>
             <input type="submit" value="Delete"/>
         </form>
 
-    </div>
+ 
 
     <div id="output">
         <!--On method option selected: append description-->
@@ -48,9 +45,6 @@ I might prefer this one-->
         <input type="text" name="lib_name" id="lib_name" />
         <input type="submit" value="Submit" />
     </form>
-
-<!--not sure if I should force the method and the description to be submitted together
-or to have the dropdown be the reference for the method, then have the description entered-->
 
 <h5>Type a method of the library here:</h5>
     <form id="method_submit">
@@ -64,6 +58,17 @@ or to have the dropdown be the reference for the method, then have the descripti
             </textarea>
         <input type="submit" value="Submit" />
     </form>
+    
+    <script type="text/javascript">
+
+
+// method drop down
+//$('#output').append('<p>Method selected:</p> \n')
+
+
+        
+        
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="script/index.js"></script>
