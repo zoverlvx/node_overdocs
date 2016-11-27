@@ -22,18 +22,18 @@ I might prefer this one-->
        <!--    Underscore-->
        <!--</option>-->
        </select>
-       <input type="submit" value="Delete"/>
+        <input type="submit" value="Delete" />
     </form>
 
-        <h5>Methods:</h5>
-        <form id="method_drop">
-            <select id="method_select">
+    <h5>Methods:</h5>
+    <form id="method_drop">
+        <select id="method_select">
 
             </select>
-            <input type="submit" value="Delete"/>
-        </form>
+        <input type="submit" value="Delete" />
+    </form>
 
- 
+
 
     <div id="output">
         <!--On method option selected: append description-->
@@ -46,29 +46,37 @@ I might prefer this one-->
         <input type="submit" value="Submit" />
     </form>
 
-<h5>Type a method of the library here:</h5>
+    <h5>Type a method of the library here:</h5>
     <form id="method_submit">
-        <input type="text" name="method_name" id="method_name" />
+
+        <input type="text" id="method_name" />
+
+        <h5>Now add an example of the method or a description:</h5>
+        <textarea name="description" cols="30" rows="10"></textarea>
+
         <input type="submit" value="Submit" />
+
     </form>
 
-<h5>Now add an example of the method or a description:</h5>
-    <form id="description_submit">
-        <textarea rows="4" cols="50" id="description_name">
-            </textarea>
-        <input type="submit" value="Submit" />
-    </form>
-    
-    <script type="text/javascript">
+<!--
 
+$('#method_submit').submit(event => {
+    event.preventDefault();
+    let method_name = $('#method_name').val();
+  let description_name = $('textarea[name="description"]').val();
 
-// method drop down
-//$('#output').append('<p>Method selected:</p> \n')
+    $('#output').append('<p>' + library_name + '</p>');
+    $('#output').append('<p>' + method_name + '</p>');
 
+    method_name = $('#method_name').val('');
+    description_name = $('textarea[name="description"]').val('');
+  });
 
-        
-        
-    </script>
+-->
+
+          
+
+ 
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="script/index.js"></script>
