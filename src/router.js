@@ -23,10 +23,10 @@ router.get('/libraries', (req, res) => {
     });
 });
 
-//GET single library // I don't think this is doing anything on the DOM yet
+//GET single library // I don't think I need this
 router.get('/libraries/:_id', (req, res) => {
     Libraries.findOne({
-        _id: req.params._id
+        library_name: Libraries.library_name
     }), (err, library) => {
         if (err) {
             return res.status(500).json({
@@ -37,14 +37,12 @@ router.get('/libraries/:_id', (req, res) => {
     }
 });
 
-//on request of route of libraries/library_name
-//spits out an array of entries[i].method and entries[i].description
 
-//GET method
-router.get('/libraries/library_name', (req, res) => {
+//GET method and description from library // I think this almost works
+router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
     Libraries.findOne({
-        method: req.params.method,
-        description: req.params.description //this isn't declared???
+        method: Libraries.library_name.entries[0].method,
+        description: Libraries.library_name.entries[0].description 
     }), (err, method) => {
         if (err) {
             return res.status(500).json({
@@ -71,16 +69,15 @@ router.post('/libraries', (req, res) => {
     });
 });
 
-// router.put('/libraries/library_name', (req, res) => {
-//     Libraries.findOneAndUpdate({ _id: req.params.id }, Libraries.entries[{
-//         method: res,
-//         description: res
-//     }]);
-// });
-
-router.put('/libraries/:_id', (req, res) => {
-    Libraries.findByIdAndUpdate({_id: req.params._id})    
+//PUT 
+router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
+    Libraries.findOneAndUpdate({ library_name: Libraries.library_name }, Libraries.entries[{
+        method: req.body.toString(),
+        description: req.body.toString()
+    }]);
 });
+
+
 
 //POST library object in Mongo
 // router.post('/libraries', (req, res) => {
