@@ -47,13 +47,13 @@ function submitLibrary() {
 
 function getLibrary(cbFn) {
     console.log(cbFn);
-    $.ajax({ 
+    $.ajax({
             url: 'https://node-study-zoverlvx.c9users.io/libraries', // libraries/ + actual name of library?
             dataType: 'json', // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
             type: 'GET',
         })
         .done((result) => {
-            cbFn(result); 
+            cbFn(result);
         });
 }
 
@@ -65,15 +65,29 @@ function initializeLibraryDropdown() {
     });
 }
 
+//on selected library, must append the method dropdown
+function libraryDropdown(selected_library) {
+    $('#library_drop').change((event) => {
+        selected_library = $('#library_drop option:selected');
+        getLibrary(selected_library);
+        // route is library/library_name
+        // need access of object
+        // append drop down for methods of that library on select
+        getMethod(selected_library);
+        $('#method_select').append('<option>' + selected_library.method + '</option>')
+    })
+}
+
 ////// Testing Method format
 
-function addMethod(method_name) {
+function addMethod(library_name, method_name, description) {
     let method_post = {
         entries: [{
-            'method': method_name
+            'method': method_name,
+            'description': description
         }]
     };
-    let ajax = $.ajax('/libraries/library_name', {
+    let ajax = $.ajax('/libraries/' + library_name, {
         type: 'POST', //should this be POST or PUT?
         data: JSON.stringify(method_post),
         dataType: 'json',
@@ -82,21 +96,32 @@ function addMethod(method_name) {
 
 };
 
-function submitMethod(method_name) {
+function registerMethodAndDescriptionSubmit() {
     $('#method_submit').submit((event) => {
         let i = 1;
+        let libraryval = $('#lib_select').val();
         let methodval = $('#method_name').val().trim();
+        let descriptionval = $('textarea[name="description"]').val().trim();
         event.preventDefault();
-        
 
-        if (!$.trim(methodval)) {
+
+        if (!$.trim(methodval) && !$.trim(descriptionval)) {
             alert('Please enter a method name with a description');
         }
         else {
-            addMethod(methodval)
+            addMethod(libraryval, methodval, descriptionval);
         }
 
         i++;
+        $('#method_select').append($('<option>', {
+            value: i,
+            text: methodval //associates to all the libraries
+        }));
+        
+        //libraryval = $('#lib_select').val();
+        methodval = $('#method_name').val('');
+        descriptionval = $('textarea[name="description"]').val('');
+        
     });
 
 };
@@ -104,13 +129,13 @@ function submitMethod(method_name) {
 function getMethod(cbFn) {
     console.log(cbFn);
     $.ajax({
-        url: 'https://node-study-zoverlvx.c9users.io/libraries/library_name',
-        dataType: 'json',
-        type: 'GET'
-    })
-    .done((result) => {
-        cbFn(result);
-    });
+            url: 'https://node-study-zoverlvx.c9users.io/libraries/library_name',
+            dataType: 'json',
+            type: 'GET'
+        })
+        .done((result) => {
+            cbFn(result);
+        });
 }
 
 function initializeMethodDropdown() {
@@ -125,19 +150,7 @@ function initializeMethodDropdown() {
 
 
 
-//on selected library, must append the method dropdown
-function libraryDropdown(selected_library) {
-    $('#library_drop').change((event) => {
-        $('#hidden').show();
-        selected_library = $('#library_drop option:selected');
-        // GET
-        // route is library/library_name
-        // need access of object
-        // append drop down for methods of that library on select
-        getMethod(selected_library);
-        $('#method_select').append('<option>' + selected_library.method +'</option>')
-    })
-}
+
 
 //could probably be added to library dropdown
 //on selected library, on selected method ???
@@ -167,7 +180,7 @@ $(document).ready(() => {
     initializeLibraryDropdown();
     initializeMethodDropdown();
     submitLibrary();
-    submitMethod();
+    registerMethodAndDescriptionSubmit(); // other functions 
     updateLibrary();
     deleteLibrary();
     getLibrary((result) => {
