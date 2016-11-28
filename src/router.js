@@ -23,7 +23,7 @@ router.get('/libraries', (req, res) => {
     });
 });
 
-//GET single library // I don't think I need this
+//GET single library // I think I need to update this with methods and descriptions
 router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
     Libraries.findOne({
         library_name: Libraries.library_name
@@ -42,7 +42,7 @@ router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
 router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
     Libraries.findOne({
         method: Libraries.library_name.entries[0].method,
-        description: Libraries.library_name.entries[0].description 
+        description: Libraries.library_name.entries[0].description
     }), (err, method) => {
         if (err) {
             return res.status(500).json({
@@ -72,10 +72,33 @@ router.post('/libraries', (req, res) => {
 
 //PUT 
 router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
-    Libraries.findOneAndUpdate({ library_name: Libraries.library_name }, Libraries.entries[{
+    Libraries.findOneAndUpdate({
+        library_name: Libraries.library_name
+    }, Libraries.entries[{
         method: req.body.toString(),
         description: req.body.toString()
     }]);
+});
+
+// Not sure if this is better code for the PUT
+
+// router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
+//     Libraries.findOneAndUpdate({
+//         "library_name": Libraries.library_name
+//     }, {
+//         "$set": {
+//             "method": Libraries.library_name.entries[0].method,
+//             "description": Libraries.library_name.entries[0].description
+//         }
+//     }).exec((err, library) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send(err);
+//         }
+//         else {
+//             res.status(200).send(library);
+//         }
+//     });
 });
 
 
@@ -95,9 +118,9 @@ router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
 //                 console.error(err);                
 //             }            
 //                 console.log({library});
-            
+
 //         });
-        
+
 // });
 
 

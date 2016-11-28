@@ -23,7 +23,7 @@ router.get('/libraries', function (req, res) {
     });
 });
 
-//GET single library // I don't think I need this
+//GET single library // I think I need to update this with methods and descriptions
 router.get('/libraries/' + Libraries.library_name, function (req, res) {
     Libraries.findOne({
         library_name: Libraries.library_name
@@ -69,10 +69,30 @@ router.post('/libraries', function (req, res) {
 
 //PUT 
 router.put('/libraries/' + Libraries.library_name, function (req, res) {
-    Libraries.findOneAndUpdate({ library_name: Libraries.library_name }, Libraries.entries[{
+    Libraries.findOneAndUpdate({
+        library_name: Libraries.library_name
+    }, Libraries.entries[{
         method: req.body.toString(),
         description: req.body.toString()
     }]);
+});
+
+router.put('/libraries/' + Libraries.library_name, function (req, res) {
+    Libraries.findOneAndUpdate({
+        "library_name": Libraries.library_name
+    }, {
+        "$set": {
+            "method": Libraries.library_name.entries[0].method,
+            "description": Libraries.library_name.entries[0].description
+        }
+    }).exec(function (err, library) {
+        if (err) {
+            console.log(err);
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(library);
+        }
+    });
 });
 
 //POST library object in Mongo
