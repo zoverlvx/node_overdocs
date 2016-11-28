@@ -24,7 +24,7 @@ router.get('/libraries', (req, res) => {
 });
 
 //GET single library // I don't think I need this
-router.get('/libraries/:_id', (req, res) => {
+router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
     Libraries.findOne({
         library_name: Libraries.library_name
     }), (err, library) => {
@@ -68,6 +68,7 @@ router.post('/libraries', (req, res) => {
         res.status(201).json(library);
     });
 });
+
 
 //PUT 
 router.put(`/libraries/${Libraries.library_name}`, (req, res) => {

@@ -24,7 +24,7 @@ router.get('/libraries', function (req, res) {
 });
 
 //GET single library // I don't think I need this
-router.get('/libraries/:_id', function (req, res) {
+router.get('/libraries/' + Libraries.library_name, function (req, res) {
     Libraries.findOne({
         library_name: Libraries.library_name
     }), function (err, library) {
