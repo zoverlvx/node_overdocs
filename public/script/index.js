@@ -126,14 +126,14 @@ function registerMethodAndDescriptionSubmit() {
 
 };
 
-function getMethod(cbFn) {
+function getMethod(cbFn, selected_library) {
     console.log(cbFn);
     $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries/library_name',
+            url: 'https://node-study-zoverlvx.c9users.io/libraries/' + selected_library,
             dataType: 'json',
             type: 'GET'
         })
-        .done((result) => {
+        .done((result) => { // might need two different GET method arguments
             cbFn(result);
         });
 }

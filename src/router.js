@@ -24,33 +24,50 @@ router.get('/libraries', (req, res) => {
 });
 
 //GET single library // I think I need to update this with methods and descriptions
-router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
-    Libraries.findOne({
-        library_name: Libraries.library_name
-    }), (err, library) => {
-        if (err) {
-            return res.status(500).json({
-                message: 'Library not found'
-            });
-        }
-        res.json(library);
-    }
-});
+// router.get('/libraries/:library_name', (req, res) => {
+//     console.log('Libraries.library_name: ', Libraries);
+//     console.log('params.library_name: ', req.params);
+//     Libraries.findOne({
+//         library_name: req.params.library_name
+//     }), (err, library) => {
+//         if (err) {
+//             return res.status(500).json({
+//                 message: 'Library not found'
+//             });
+//         }
+//         res.json(library);
+//     }
+// });
+
+// e.g. Adventure.findOne({ type: 'iphone' }, function (err, adventure) {});
 
 
-//GET method and description from library // I think this almost works
-router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
+//GET method 
+router.get('/libraries/:library_name/:method', (req, res) => {
     Libraries.findOne({
-        method: Libraries.library_name.entries[0].method,
-        description: Libraries.library_name.entries[0].description
+        method: req.params.library_name.entries[0].method
     }), (err, method) => {
         if (err) {
             return res.status(500).json({
-                message: 'Method not found'
+                message: 'Method not found.'
             });
         }
         res.json(method);
     }
+});
+
+//GET description
+router.get('/libraries/:library_name/:method/:description', (req, res) => {
+   Libraries.findOne({
+       description: req.params.library_name.entries[0].description
+   }), (err, description) => {
+       if (err) {
+           return res.status(500).json({
+               message: 'Description not found.'
+           });
+       }
+       res.json(description);
+   }
 });
 
 
@@ -58,7 +75,7 @@ router.get(`/libraries/${Libraries.library_name}`, (req, res) => {
 router.post('/libraries', (req, res) => {
     //console.log(req.body);
     Libraries.create({
-        library_name: req.body.library_name
+        library_name: req.params.library_name
     }, (err, library) => {
         if (err) {
             return res.status(500).json({
@@ -71,13 +88,13 @@ router.post('/libraries', (req, res) => {
 
 
 //PUT 
-router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
+router.put('/libraries/:method/:description', (req, res) => {
     Libraries.findOneAndUpdate({
         library_name: Libraries.library_name
     }, Libraries.entries[{
-        method: req.body.toString(),
-        description: req.body.toString()
-    }]);
+        method: req.params.library_name.entries[0].method,
+        description: req.params.library_name.entries[0].description
+    }]); //This doesn't look right at all
 });
 
 // Not sure if this is better code for the PUT
@@ -99,7 +116,7 @@ router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
 //             res.status(200).send(library);
 //         }
 //     });
-});
+// });
 
 
 
