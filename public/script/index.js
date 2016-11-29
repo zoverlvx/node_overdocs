@@ -80,7 +80,7 @@ function libraryDropdown(selected_library) {
 
 ////// Testing Method format
 
-function addMethod(library_name, method_name, description) {
+function addMethodAndDescription(library_name, method_name, description) {
     let method_post = {
         entries: [{
             'method': method_name,
@@ -109,7 +109,7 @@ function registerMethodAndDescriptionSubmit() {
             alert('Please enter a method name with a description');
         }
         else {
-            addMethod(libraryval, methodval, descriptionval);
+            addMethodAndDescription(libraryval, methodval, descriptionval);
         }
 
         i++;
@@ -118,7 +118,6 @@ function registerMethodAndDescriptionSubmit() {
             text: methodval //associates to all the libraries
         }));
         
-        //libraryval = $('#lib_select').val();
         methodval = $('#method_name').val('');
         descriptionval = $('textarea[name="description"]').val('');
         
@@ -149,14 +148,9 @@ function initializeMethodDropdown() {
 ////// Testing Method format end
 
 
-
-
-
-//could probably be added to library dropdown
-//on selected library, on selected method ???
-function updateLibrary(library_name) {
+function updateLibrary(library_name, method_update, description_update) {
     let library_put = {
-        'library_name': library_name._id
+        'library_name': library_name
     };
     let ajax = $.ajax(`/libraries/${library_name}`, {
         type: 'PUT',
@@ -165,6 +159,11 @@ function updateLibrary(library_name) {
         contentType: 'application/json'
     });
 }
+
+
+//could probably be added to library dropdown
+//on selected library, on selected method ???
+
 
 function deleteLibrary(library_name) {
     let ajax = $.ajax(`/libraries/${library_name}`, {

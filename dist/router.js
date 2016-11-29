@@ -23,27 +23,8 @@ router.get('/libraries', function (req, res) {
     });
 });
 
-//GET single library // I think I need to update this with methods and descriptions
-// router.get('/libraries/:library_name', (req, res) => {
-//     console.log('Libraries.library_name: ', Libraries);
-//     console.log('params.library_name: ', req.params);
-//     Libraries.findOne({
-//         library_name: req.params.library_name
-//     }), (err, library) => {
-//         if (err) {
-//             return res.status(500).json({
-//                 message: 'Library not found'
-//             });
-//         }
-//         res.json(library);
-//     }
-// });
-
-// e.g. Adventure.findOne({ type: 'iphone' }, function (err, adventure) {});
-
-
 //GET method 
-router.get('/libraries/:library_name/:method', function (req, res) {
+router.get('/libraries/:library_name/', function (req, res) {
     Libraries.findOne({
         method: req.params.library_name.entries[0].method
     }), function (err, method) {
@@ -57,7 +38,7 @@ router.get('/libraries/:library_name/:method', function (req, res) {
 });
 
 //GET description
-router.get('/libraries/:library_name/:method/:description', function (req, res) {
+router.get('/libraries/:library_name/:method/', function (req, res) {
     Libraries.findOne({
         description: req.params.library_name.entries[0].description
     }), function (err, description) {
@@ -72,7 +53,6 @@ router.get('/libraries/:library_name/:method/:description', function (req, res) 
 
 //POST libraries
 router.post('/libraries', function (req, res) {
-    //console.log(req.body);
     Libraries.create({
         library_name: req.params.library_name
     }, function (err, library) {
@@ -85,71 +65,33 @@ router.post('/libraries', function (req, res) {
     });
 });
 
-//PUT 
-router.put('/libraries/:method/:description', function (req, res) {
+//PUT
+router.put('/libraries/:library_name', function (req, res) {
     Libraries.findOneAndUpdate({
-        library_name: Libraries.library_name
-    }, Libraries.entries[{
-        method: req.params.library_name.entries[0].method,
-        description: req.params.library_name.entries[0].description
-    }]); //This doesn't look right at all
-});
-
-// Not sure if this is better code for the PUT
-
-// router.put(`/libraries/${Libraries.library_name}`, (req, res) => {
-//     Libraries.findOneAndUpdate({
-//         "library_name": Libraries.library_name
-//     }, {
-//         "$set": {
-//             "method": Libraries.library_name.entries[0].method,
-//             "description": Libraries.library_name.entries[0].description
-//         }
-//     }).exec((err, library) => {
-//         if (err) {
-//             console.log(err);
-//             res.status(500).send(err);
-//         }
-//         else {
-//             res.status(200).send(library);
-//         }
-//     });
-// });
-
-
-//POST library object in Mongo
-// router.post('/libraries', (req, res) => {
-//     console.log(req.body);
-//     let mylibraryToAdd = new Libraries({
-//             library_name: req.body.toString(),
-//             entries: [{
-//                 method: req.body.toString(),
-//                 description: req.body.toString()
-//             }]
-//         })
-//         mylibraryToAdd.save((err, library) => {
-//             if (err) {
-//                 console.error(err);                
-//             }            
-//                 console.log({library});
-
-//         });
-
-// });
-
-
-//Seems doable
-router.delete('/libraries/:_id', function (req, res) {
-
-    Libraries.findByIdAndRemove(req.params._id, function (err, library) {
+        "library_name": req.params.library_name
+    }, { "$set": { "method": req.params.library_name.entries[0].method,
+            "description": req.params.library_name.entries[0].description } }).exec(function (err, update) {
         if (err) {
-            return res.status(404);
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(update);
         }
-        res.json({
-            message: 'Library deleted.'
-        });
     });
 });
+
+//StackOverFlow Example
+// Book.findOneAndUpdate({ "_id": bookId }, { "$set": { "name": name, "genre": genre, "author": author, "similar": similar}}).exec(function(err, book){
+//   if(err) {
+//       console.log(err);
+//       res.status(500).send(err);
+//   } else {
+//             res.status(200).send(book);
+//   }
+// });
+
+//DELETE library and methods
+
+//DELETE method and description
 
 module.exports = router;
 //# sourceMappingURL=router.js.map
