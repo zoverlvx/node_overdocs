@@ -117,10 +117,10 @@ function registerMethodAndDescriptionSubmit() {
             value: i,
             text: methodval //associates to all the libraries
         }));
-        
+
         methodval = $('#method_name').val('');
         descriptionval = $('textarea[name="description"]').val('');
-        
+
     });
 
 };
@@ -159,6 +159,60 @@ function updateLibrary(library_name, method_update, description_update) {
         contentType: 'application/json'
     });
 }
+
+// Not sure // See pseudo code below this
+// function updateLibraryOnSubmit(selected_library) {  
+//     $('#lib_submit').submit((event) => {
+//             selected_library = $('#library_drop option:selected').val();
+// // I'm missing something in order to replace one with the other
+//     let libval = $('#lib_name').val().trim();
+//     event.preventDefault();
+    
+//         if (!$.trim(libval) /* || libval already exists */ ) {
+//         alert('Please enter the name of the library');
+//     }
+//     else {
+//         updateLibrary(libval);
+//         $('#lib_select').append($('<option>', {
+//             text: libval
+//         }));
+//     }
+    
+//     libval = $('#lib_name').val('');
+    
+//     }
+
+// PSEUDO Code
+
+// on submit #lib_submit 
+// check #library_drop option:selected
+// take the value of #lib_name 
+// replace the value of #library_drop with the value of #lib_name
+// if !$.trim(#lib_name) then alert "Please, enter the name of the library"
+// if the value of #library_drop already equals #lib_name then alert "This library already exists"
+// on submit #method_submit 
+// check #method_select option: selected
+// take the value of #method_name
+// replace the value of #method_select with the value of #method_select
+// if !$.trim(#method_name) && !$.trim('textarea[name="description"]') then alert "Please enter a method name with a description"
+// if the value of #method_select already equals #method_name then already "This method already exists"
+// on submit #method_submit
+// check #method_select option: selected
+// take the value name of 'textarea[name="description"]'
+// replace library_name.entries[0].description with the new value...?
+
+    
+    
+    
+
+
+
+
+    
+    
+
+
+function updateMethodAndDescriptionOnSubmit() {}
 
 
 //could probably be added to library dropdown

@@ -11,6 +11,7 @@ const jsonParser = bodyParser.json();
 
 app.use(jsonParser);
 
+
 //GET all libraries
 router.get('/libraries', (req, res) => {
     Libraries.find((err, library_name) => {
@@ -25,6 +26,10 @@ router.get('/libraries', (req, res) => {
 
 //GET method 
 router.get('/libraries/:library_name/', (req, res) => {
+
+    console.log('This is with params ' + req.params.library_name);
+    console.log('This is with body ' + req.body);
+
     Libraries.findOne({
         method: req.params.library_name.entries[0].method
     }), (err, method) => {
@@ -67,17 +72,22 @@ router.post('/libraries', (req, res) => {
 
 //PUT
 router.put('/libraries/:library_name', (req, res) => {
-   Libraries.findOneAndUpdate({
-       "library_name": req.params.library_name
-   }, {"$set": {"method": req.params.library_name.entries[0].method, 
-   "description": req.params.library_name.entries[0].description}})
-   .exec((err, update) => {
-       if (err) {
-           res.status(500).send(err);
-       } else {
-           res.status(200).send(update);
-       }
-   }) 
+    Libraries.findOneAndUpdate({
+            "library_name": req.params.library_name
+        }, {
+            "$set": {
+                "method": req.params.library_name.entries[0].method,
+                "description": req.params.library_name.entries[0].description
+            }
+        })
+        .exec((err, update) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            else {
+                res.status(200).send(update);
+            }
+        })
 });
 
 //StackOverFlow Example

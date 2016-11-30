@@ -25,6 +25,10 @@ router.get('/libraries', function (req, res) {
 
 //GET method 
 router.get('/libraries/:library_name/', function (req, res) {
+
+    console.log('This is with params ' + req.params.library_name);
+    console.log('This is with body ' + req.body);
+
     Libraries.findOne({
         method: req.params.library_name.entries[0].method
     }), function (err, method) {
@@ -69,8 +73,12 @@ router.post('/libraries', function (req, res) {
 router.put('/libraries/:library_name', function (req, res) {
     Libraries.findOneAndUpdate({
         "library_name": req.params.library_name
-    }, { "$set": { "method": req.params.library_name.entries[0].method,
-            "description": req.params.library_name.entries[0].description } }).exec(function (err, update) {
+    }, {
+        "$set": {
+            "method": req.params.library_name.entries[0].method,
+            "description": req.params.library_name.entries[0].description
+        }
+    }).exec(function (err, update) {
         if (err) {
             res.status(500).send(err);
         } else {
