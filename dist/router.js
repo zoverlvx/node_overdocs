@@ -13,6 +13,10 @@ app.use(jsonParser);
 
 //GET all libraries
 router.get('/libraries', function (req, res) {
+    //console.log(req.headers['user-agent']);
+    //console.log(req.headers);
+    console.log(req.body);
+
     Libraries.find(function (err, library_name) {
         if (err) {
             return res.status(500).json({
@@ -23,32 +27,28 @@ router.get('/libraries', function (req, res) {
     });
 });
 
-//GET method 
+//GET library
 router.get('/libraries/:library_name/', function (req, res) {
-
-    console.log('This is with params ' + req.params.library_name);
-    console.log('This is with body ' + req.body);
-
     Libraries.findOne({
-        method: req.params.library_name.entries[0].method
+        library_name: req.params.library_name
     }), function (err, method) {
         if (err) {
             return res.status(500).json({
-                message: 'Method not found.'
+                message: 'Library not found.'
             });
         }
         res.json(method);
     };
 });
 
-//GET description
+//GET method
 router.get('/libraries/:library_name/:method/', function (req, res) {
     Libraries.findOne({
-        description: req.params.library_name.entries[0].description
+        method: req.params.entries[0].method
     }), function (err, description) {
         if (err) {
             return res.status(500).json({
-                message: 'Description not found.'
+                message: 'Method not found.'
             });
         }
         res.json(description);
@@ -70,36 +70,96 @@ router.post('/libraries', function (req, res) {
 });
 
 //PUT
+// router.put('/libraries/:library_name', (req, res) => {
+//     console.log('This is req.body: ', req.body);
+//     console.log('This is req.params ',  req.params);
+//     console.log('This is req.body.entries[0] ', req.body.entries[0]);
+//     console.log('This is req.body.entries[0].method ', req.body.entries[0].method);
+//     console.log('This is req.body.entries[0].description', req.body.entries[0].description);
+//     console.log('This is req.params.library_name', req.params.library_name);
+//console.log('This is req.body.library_name', req.body.library_name);
+
+//     Libraries.findOneAndUpdate({
+//             "library_name": req.params.library_name
+//         }, 
+//         {
+//             $set: [{
+//                 "method": req.body.entries[0].method,
+//                 "description": req.body.entries[0].description
+//             }]
+//         })
+//         .exec((err, update) => {
+//             console.log('Update', update);
+//             if (err) {
+//                 res.status(500).send(err);
+//             }
+//             else {
+//                 res.status(200).send(update);
+//             }
+//         })
+// });
+
 router.put('/libraries/:library_name', function (req, res) {
-    Libraries.findOneAndUpdate({
-        "library_name": req.params.library_name
-    }, {
-        "$set": {
-            "method": req.params.library_name.entries[0].method,
-            "description": req.params.library_name.entries[0].description
-        }
-    }).exec(function (err, update) {
+    var library_name = req.params.library_name;
+    Libraries.findOne({ library_name: library_name }, function (err, updatedLibrary) {
         if (err) {
             res.status(500).send(err);
-        } else {
-            res.status(200).send(update);
+        } else if (req.params.library_name) {
+            updatedLibrary.library_name = req.params.library_name;
+            res.status(200).send(updatedLibrary);
         }
     });
 });
 
-//StackOverFlow Example
-// Book.findOneAndUpdate({ "_id": bookId }, { "$set": { "name": name, "genre": genre, "author": author, "similar": similar}}).exec(function(err, book){
-//   if(err) {
-//       console.log(err);
-//       res.status(500).send(err);
-//   } else {
-//             res.status(200).send(book);
-//   }
-// });
+router.put('/libraries/:library_name/:method', function (req, res) {
+    var method = req.body.entries[0].method;
+    Libraries.findOne({ method: method }, function (err, updatedMethod) {
+        if (err) {
+            res.status(500).send(err);
+        } else if (req.body.entries[0].method) {
+            updatedMethod.method = req.body.entries[0].method;
+            res.status(200).send(updatedMethod);
+        }
+    });
+});
+
+router.put('/libraries/:library_name/:method/:description', function (req, res) {
+    var description = req.body.entries[0].description; // still, no idea why this is doing this   
+    Libraries.findOne({ description: description }, function (err, updatedDescription) {
+        if (err) {
+            res.status(500).send(err);
+        } else if (req.body.entries[0].description) {
+            updatedDescription.description = req.body.entries[0].description;
+            res.status(200).send(updatedDescription);
+        }
+    });
+});
 
 //DELETE library and methods
+router.delete('/libraries/:library_name', function (req, res) {
+    var library_name = req.params.library_name;
+    Libraries.findOneAndRemove({ library_name: library_name }, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        }
+
+        res.status(200).send();
+    });
+});
 
 //DELETE method and description
+router.delete('/libraries/:library_name/:method', function (req, res) {
+    var method = req.body.entries[0].method;
+    Libraries.findOneAndRemove({ method: method }, function (err) {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        }
+
+        res.status(200).send();
+    });
+});
 
 module.exports = router;
 //# sourceMappingURL=router.js.map

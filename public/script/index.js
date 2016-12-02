@@ -54,11 +54,13 @@ function getLibrary(cbFn) {
         })
         .done((result) => {
             cbFn(result);
+
         });
 }
 
 function initializeLibraryDropdown() {
     getLibrary((result) => {
+        console.log(result);
         result.forEach((libraryObj) => {
             $('#lib_select').append('<option>' + libraryObj.library_name + '</option>')
         })
@@ -88,7 +90,7 @@ function addMethodAndDescription(library_name, method_name, description) {
         }]
     };
     let ajax = $.ajax('/libraries/' + library_name, {
-        type: 'POST', //should this be POST or PUT?
+        type: 'PUT', //should this be POST or PUT?
         data: JSON.stringify(method_post),
         dataType: 'json',
         contentType: 'application/json'
@@ -100,8 +102,11 @@ function registerMethodAndDescriptionSubmit() {
     $('#method_submit').submit((event) => {
         let i = 1;
         let libraryval = $('#lib_select').val();
+        console.log(libraryval);
         let methodval = $('#method_name').val().trim();
+        console.log(methodval);
         let descriptionval = $('textarea[name="description"]').val().trim();
+        console.log(descriptionval);
         event.preventDefault();
 
 
@@ -109,7 +114,8 @@ function registerMethodAndDescriptionSubmit() {
             alert('Please enter a method name with a description');
         }
         else {
-            addMethodAndDescription(libraryval, methodval, descriptionval);
+            //addMethodAndDescription(libraryval, methodval, descriptionval);
+            updateLibrary(libraryval, methodval, descriptionval);
         }
 
         i++;
@@ -150,15 +156,20 @@ function initializeMethodDropdown() {
 
 function updateLibrary(library_name, method_update, description_update) {
     let library_put = {
-        'library_name': library_name
+        'library_name': library_name,
+        'method': method_update,
+        'description': description_update
     };
-    let ajax = $.ajax(`/libraries/${library_name}`, {
+    addMethodAndDescription(library_name, method_update, description_update);
+    let ajax = $.ajax('/libraries/' + library_name, {
         type: 'PUT',
         data: JSON.stringify(library_name),
         dataType: 'json',
         contentType: 'application/json'
     });
 }
+
+
 
 // Not sure // See pseudo code below this
 // function updateLibraryOnSubmit(selected_library) {  
@@ -167,7 +178,7 @@ function updateLibrary(library_name, method_update, description_update) {
 // // I'm missing something in order to replace one with the other
 //     let libval = $('#lib_name').val().trim();
 //     event.preventDefault();
-    
+
 //         if (!$.trim(libval) /* || libval already exists */ ) {
 //         alert('Please enter the name of the library');
 //     }
@@ -177,9 +188,9 @@ function updateLibrary(library_name, method_update, description_update) {
 //             text: libval
 //         }));
 //     }
-    
+
 //     libval = $('#lib_name').val('');
-    
+
 //     }
 
 // PSEUDO Code
@@ -187,7 +198,7 @@ function updateLibrary(library_name, method_update, description_update) {
 // on submit #lib_submit 
 // check #library_drop option:selected
 // take the value of #lib_name 
-// replace the value of #library_drop with the value of #lib_name
+// replace the value of #library_drop with the value of #lib_name // library_name = $('#lib_name').val()...?
 // if !$.trim(#lib_name) then alert "Please, enter the name of the library"
 // if the value of #library_drop already equals #lib_name then alert "This library already exists"
 // on submit #method_submit 
@@ -201,15 +212,19 @@ function updateLibrary(library_name, method_update, description_update) {
 // take the value name of 'textarea[name="description"]'
 // replace library_name.entries[0].description with the new value...?
 
-    
-    
-    
+// req.body and req.params
+// how to replace the value within an object with a new value
+// 
 
 
 
 
-    
-    
+
+
+
+
+
+
 
 
 function updateMethodAndDescriptionOnSubmit() {}
