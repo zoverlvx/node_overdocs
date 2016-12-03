@@ -43,8 +43,9 @@ router.get('/libraries/:library_name/', function (req, res) {
 
 //GET method
 router.get('/libraries/:library_name/:method/', function (req, res) {
+    console.log(req.params);
     Libraries.findOne({
-        method: req.params.entries[0].method
+        method: req.params.method
     }), function (err, description) {
         if (err) {
             return res.status(500).json({
@@ -57,8 +58,10 @@ router.get('/libraries/:library_name/:method/', function (req, res) {
 
 //POST libraries
 router.post('/libraries', function (req, res) {
+    console.log(req.body);
+    console.log('This is params', req.params);
     Libraries.create({
-        library_name: req.params.library_name
+        library_name: req.body.library_name
     }, function (err, library) {
         if (err) {
             return res.status(500).json({
@@ -66,6 +69,26 @@ router.post('/libraries', function (req, res) {
             });
         }
         res.status(201).json(library);
+    });
+});
+
+//POST method and description to library
+router.post('/libraries/:library_name', function (req, res) {
+    console.log(req.body);
+    Libraries.findOneAndUpdate({
+        library_name: req.params.library_name
+    }, {
+        $set: {
+            entries: [{
+                method: req.body.method,
+                description: req.body.description
+            }]
+        }
+    }, function (err, library) {
+        if (err) {
+            console.log(err);
+        }
+        console.log(library);
     });
 });
 
@@ -99,21 +122,31 @@ router.post('/libraries', function (req, res) {
 //         })
 // });
 
-router.put('/libraries/:library_name', function (req, res) {
-    var library_name = req.params.library_name;
-    Libraries.findOne({ library_name: library_name }, function (err, updatedLibrary) {
-        if (err) {
-            res.status(500).send(err);
-        } else if (req.params.library_name) {
-            updatedLibrary.library_name = req.params.library_name;
-            res.status(200).send(updatedLibrary);
-        }
-    });
-});
+// This is to edit the name of an already existing library
+// router.put('/libraries/:library_name', (req, res) => {
+//     let library_name = req.params.library_name;
+//     Libraries.findOne({
+//         library_name: library_name
+//     }, (err, updatedLibrary) => {
+//         if (err) {
+//             res.status(500).send(err);
+//         }
+//         else if (req.params.library_name) {
+//             updatedLibrary.library_name = req.params.library_name;
+//             res.status(200).send(updatedLibrary);
+//         }
+//     });
+// });
 
+// need a an edit button to change the library_name instead of using submit specifically
+
+//This is to edit the name of an already existing method
 router.put('/libraries/:library_name/:method', function (req, res) {
+    // params as it relates to body, I understand // query - still more to be said //url
     var method = req.body.entries[0].method;
-    Libraries.findOne({ method: method }, function (err, updatedMethod) {
+    Libraries.findOne({
+        method: method
+    }, function (err, updatedMethod) {
         if (err) {
             res.status(500).send(err);
         } else if (req.body.entries[0].method) {
@@ -125,7 +158,9 @@ router.put('/libraries/:library_name/:method', function (req, res) {
 
 router.put('/libraries/:library_name/:method/:description', function (req, res) {
     var description = req.body.entries[0].description; // still, no idea why this is doing this   
-    Libraries.findOne({ description: description }, function (err, updatedDescription) {
+    Libraries.findOne({
+        description: description
+    }, function (err, updatedDescription) {
         if (err) {
             res.status(500).send(err);
         } else if (req.body.entries[0].description) {
@@ -135,10 +170,17 @@ router.put('/libraries/:library_name/:method/:description', function (req, res) 
     });
 });
 
+// params - 
+// body -
+// query -
+
+
 //DELETE library and methods
 router.delete('/libraries/:library_name', function (req, res) {
     var library_name = req.params.library_name;
-    Libraries.findOneAndRemove({ library_name: library_name }, function (err) {
+    Libraries.findOneAndRemove({
+        library_name: library_name
+    }, function (err) {
         if (err) {
             console.log(err);
             res.status(500).send();
@@ -151,7 +193,9 @@ router.delete('/libraries/:library_name', function (req, res) {
 //DELETE method and description
 router.delete('/libraries/:library_name/:method', function (req, res) {
     var method = req.body.entries[0].method;
-    Libraries.findOneAndRemove({ method: method }, function (err) {
+    Libraries.findOneAndRemove({
+        method: method
+    }, function (err) {
         if (err) {
             console.log(err);
             res.status(500).send();

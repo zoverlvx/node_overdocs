@@ -7,6 +7,7 @@
 // on library select, show method dropdown
 // on method dropdown select, append method and description
 
+
 function addLibrary(library_name) {
     let library_post = {
         'library_name': library_name
@@ -19,11 +20,25 @@ function addLibrary(library_name) {
     });
 };
 
+function updateLibrary(library_name, method_update, description_update) {
+    let library_put = {
+        'library_name': library_name,
+        'method': method_update,
+        'description': description_update
+    };
+    let ajax = $.ajax('/libraries/' + library_name, {
+        type: 'PUT',
+        data: JSON.stringify(library_name),
+        dataType: 'json',
+        contentType: 'application/json'
+    });
+}
+
 function submitLibrary() {
 
-    $('#lib_submit').submit((event) => {
+    $('#library_submit').submit((event) => {
         let i = 1;
-        let libval = $('#lib_name').val().trim();
+        let libval = $('#library_name').val().trim();
         event.preventDefault();
         console.log(libval);
 
@@ -32,18 +47,24 @@ function submitLibrary() {
         }
         else {
             addLibrary(libval);
-            $('#lib_select').append($('<option>', {
+            $('#library_select').append($('<option>', {
                 value: i,
                 text: libval
             }));
         }
 
-        libval = $('#lib_name').val('');
+        libval = $('#library_name').val('');
         i++;
 
     });
 
 };
+
+// function editLibrary () {
+//     $('#library_edit').submit((event) => {
+//         let libval = $('#library_name').val().trim();
+//     });
+// }
 
 function getLibrary(cbFn) {
     console.log(cbFn);
@@ -62,7 +83,7 @@ function initializeLibraryDropdown() {
     getLibrary((result) => {
         console.log(result);
         result.forEach((libraryObj) => {
-            $('#lib_select').append('<option>' + libraryObj.library_name + '</option>')
+            $('#library_select').append('<option>' + libraryObj.library_name + '</option>')
         })
     });
 }
@@ -84,13 +105,11 @@ function libraryDropdown(selected_library) {
 
 function addMethodAndDescription(library_name, method_name, description) {
     let method_post = {
-        entries: [{
-            'method': method_name,
-            'description': description
-        }]
+        'method': method_name,
+        'description': description
     };
     let ajax = $.ajax('/libraries/' + library_name, {
-        type: 'PUT', //should this be POST or PUT?
+        type: 'POST',
         data: JSON.stringify(method_post),
         dataType: 'json',
         contentType: 'application/json'
@@ -101,7 +120,7 @@ function addMethodAndDescription(library_name, method_name, description) {
 function registerMethodAndDescriptionSubmit() {
     $('#method_submit').submit((event) => {
         let i = 1;
-        let libraryval = $('#lib_select').val();
+        let libraryval = $('#library_select').val();
         console.log(libraryval);
         let methodval = $('#method_name').val().trim();
         console.log(methodval);
@@ -114,8 +133,8 @@ function registerMethodAndDescriptionSubmit() {
             alert('Please enter a method name with a description');
         }
         else {
-            //addMethodAndDescription(libraryval, methodval, descriptionval);
-            updateLibrary(libraryval, methodval, descriptionval);
+            addMethodAndDescription(libraryval, methodval, descriptionval);
+            //updateLibrary(libraryval, methodval, descriptionval);
         }
 
         i++;
@@ -153,30 +172,12 @@ function initializeMethodDropdown() {
 
 ////// Testing Method format end
 
-
-function updateLibrary(library_name, method_update, description_update) {
-    let library_put = {
-        'library_name': library_name,
-        'method': method_update,
-        'description': description_update
-    };
-    addMethodAndDescription(library_name, method_update, description_update);
-    let ajax = $.ajax('/libraries/' + library_name, {
-        type: 'PUT',
-        data: JSON.stringify(library_name),
-        dataType: 'json',
-        contentType: 'application/json'
-    });
-}
-
-
-
 // Not sure // See pseudo code below this
 // function updateLibraryOnSubmit(selected_library) {  
-//     $('#lib_submit').submit((event) => {
+//     $('#library_submit').submit((event) => {
 //             selected_library = $('#library_drop option:selected').val();
 // // I'm missing something in order to replace one with the other
-//     let libval = $('#lib_name').val().trim();
+//     let libval = $('#library_name').val().trim();
 //     event.preventDefault();
 
 //         if (!$.trim(libval) /* || libval already exists */ ) {
@@ -184,23 +185,23 @@ function updateLibrary(library_name, method_update, description_update) {
 //     }
 //     else {
 //         updateLibrary(libval);
-//         $('#lib_select').append($('<option>', {
+//         $('#library_select').append($('<option>', {
 //             text: libval
 //         }));
 //     }
 
-//     libval = $('#lib_name').val('');
+//     libval = $('#library_name').val('');
 
 //     }
 
 // PSEUDO Code
 
-// on submit #lib_submit 
+// on submit #library_submit 
 // check #library_drop option:selected
-// take the value of #lib_name 
-// replace the value of #library_drop with the value of #lib_name // library_name = $('#lib_name').val()...?
-// if !$.trim(#lib_name) then alert "Please, enter the name of the library"
-// if the value of #library_drop already equals #lib_name then alert "This library already exists"
+// take the value of #library_name 
+// replace the value of #library_drop with the value of #library_name // library_name = $('#library_name').val()...?
+// if !$.trim(#library_name) then alert "Please, enter the name of the library"
+// if the value of #library_drop already equals #library_name then alert "This library already exists"
 // on submit #method_submit 
 // check #method_select option: selected
 // take the value of #method_name
@@ -256,4 +257,6 @@ $(document).ready(() => {
     });
     addLibrary();
     libraryDropdown();
+    addMethodAndDescription(); //('ggg', 'new method', 'new description'); //play around with this line
+    // can the UI/an event call addMethodAndDescription
 });
