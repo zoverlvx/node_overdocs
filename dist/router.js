@@ -177,7 +177,7 @@ router.put('/libraries/:library_name/:method/:description', function (req, res) 
 
 //DELETE library and methods
 router.delete('/libraries/:library_name', function (req, res) {
-    var library_name = req.params.library_name;
+    var library_name = req.body.library_name;
     Libraries.findOneAndRemove({
         library_name: library_name
     }, function (err) {
@@ -192,7 +192,7 @@ router.delete('/libraries/:library_name', function (req, res) {
 
 //DELETE method and description
 router.delete('/libraries/:library_name/:method', function (req, res) {
-    var method = req.body.entries[0].method;
+    var method = req.body.method;
     Libraries.findOneAndRemove({
         method: method
     }, function (err) {

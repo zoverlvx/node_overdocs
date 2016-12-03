@@ -12,7 +12,7 @@ function addLibrary(library_name) {
     let library_post = {
         'library_name': library_name
     };
-    let ajax = $.ajax('/libraries', {
+    $.ajax('/libraries', {
         type: 'POST',
         data: JSON.stringify(library_post),
         dataType: 'json',
@@ -26,7 +26,7 @@ function updateLibrary(library_name, method_update, description_update) {
         'method': method_update,
         'description': description_update
     };
-    let ajax = $.ajax('/libraries/' + library_name, {
+    $.ajax('/libraries/' + library_name, {
         type: 'PUT',
         data: JSON.stringify(library_name),
         dataType: 'json',
@@ -70,7 +70,7 @@ function getLibrary(cbFn) {
     console.log(cbFn);
     $.ajax({
             url: 'https://node-study-zoverlvx.c9users.io/libraries', // libraries/ + actual name of library?
-            dataType: 'json', // jsonp is only used if you're using someone else's API and you want to avoid cross over issues
+            dataType: 'json',
             type: 'GET',
         })
         .done((result) => {
@@ -92,23 +92,18 @@ function initializeLibraryDropdown() {
 function libraryDropdown(selected_library) {
     $('#library_drop').change((event) => {
         selected_library = $('#library_drop option:selected');
-        getLibrary(selected_library);
-        // route is library/library_name
-        // need access of object
-        // append drop down for methods of that library on select
         getMethod(selected_library);
-        $('#method_select').append('<option>' + selected_library.method + '</option>')
+        $('#method_select').append('<option>' + selected_library.entries[0].method + '</option>')
     })
 }
 
-////// Testing Method format
 
 function addMethodAndDescription(library_name, method_name, description) {
     let method_post = {
         'method': method_name,
         'description': description
     };
-    let ajax = $.ajax('/libraries/' + library_name, {
+    $.ajax('/libraries/' + library_name, {
         type: 'POST',
         data: JSON.stringify(method_post),
         dataType: 'json',
@@ -170,29 +165,20 @@ function initializeMethodDropdown() {
     });
 }
 
-////// Testing Method format end
+function deleteLibrary(library_name) {
+    $.ajax('/libraries/' + library_name, {
+        type: 'DELETE',
+        dataType: 'json'
+    });
+}
 
-// Not sure // See pseudo code below this
-// function updateLibraryOnSubmit(selected_library) {  
-//     $('#library_submit').submit((event) => {
-//             selected_library = $('#library_drop option:selected').val();
-// // I'm missing something in order to replace one with the other
-//     let libval = $('#library_name').val().trim();
-//     event.preventDefault();
-
-//         if (!$.trim(libval) /* || libval already exists */ ) {
-//         alert('Please enter the name of the library');
-//     }
-//     else {
-//         updateLibrary(libval);
-//         $('#library_select').append($('<option>', {
-//             text: libval
-//         }));
-//     }
-
-//     libval = $('#library_name').val('');
-
-//     }
+function onDeleteLibrary() {
+    let selected_library = $('#library_drop option:selected').val();
+    $('#library_delete').submit((event) => {
+       event.preventDefault();
+       deleteLibrary(selected_library);
+    });
+}
 
 // PSEUDO Code
 
@@ -219,35 +205,19 @@ function initializeMethodDropdown() {
 
 
 
-
-
-
-
-
-
-
-
-
-function updateMethodAndDescriptionOnSubmit() {}
-
-
 //could probably be added to library dropdown
 //on selected library, on selected method ???
 
 
-function deleteLibrary(library_name) {
-    let ajax = $.ajax(`/libraries/${library_name}`, {
-        type: 'DELETE',
-        dataType: 'json'
-    });
+function initializeDropdowns() {
+    initializeLibraryDropdown();
+    initializeMethodDropdown();
 }
 
 
-
-
 $(document).ready(() => {
-    initializeLibraryDropdown();
-    initializeMethodDropdown();
+    onDeleteLibrary();
+    initializeDropdowns();
     submitLibrary();
     registerMethodAndDescriptionSubmit(); // other functions 
     updateLibrary();
