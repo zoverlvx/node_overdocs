@@ -33,7 +33,12 @@ router.get('/libraries/:library_name/', (req, res) => {
     Libraries.findOne({
         library_name: req.params.library_name
     }), (err, method) => {
-        if (err) {
+        if (typeof library_name === 'undefined') {
+            res.status(404).json({
+                status: 'error'
+            });
+        }
+        else if (err) {
             return res.status(500).json({
                 message: 'Library not found.'
             });
@@ -48,7 +53,13 @@ router.get('/libraries/:library_name/:method/', (req, res) => {
     Libraries.findOne({
         method: req.params.method
     }), (err, description) => {
-        if (err) {
+
+        if (typeof method === 'undefined') {
+            res.status(404).json({
+                status: 'error'
+            });
+        }
+        else if (err) {
             return res.status(500).json({
                 message: 'Method not found.'
             });
@@ -64,7 +75,13 @@ router.post('/libraries', (req, res) => {
     Libraries.create({
         library_name: req.body.library_name
     }, (err, library) => {
-        if (err) {
+
+        if (typeof library_name === 'undefined') {
+            res.status(404).json({
+                status: 'error'
+            });
+        }
+        else if (err) {
             return res.status(500).json({
                 message: 'Internal Server Error'
             });
@@ -86,7 +103,13 @@ router.post('/libraries/:library_name', (req, res) => {
             }]
         }
     }, (err, library) => {
-        if (err) {
+
+        if (typeof method === 'undefined' || typeof description === 'undefined') {
+            res.status(404).json({
+                status: 'error'
+            });
+        }
+        else if (err) {
             console.log(err)
         }
         console.log(library);
@@ -148,7 +171,13 @@ router.put('/libraries/:library_name/:method', (req, res) => { // params as it r
     Libraries.findOne({
         method: method
     }, (err, updatedMethod) => {
-        if (err) {
+
+        if (typeof method === 'undefined') {
+            res.status(404).json({
+                status: 'error'
+            });
+        }
+        else if (err) {
             res.status(500).send(err);
         }
         else if (req.body.entries[0].method) {
@@ -187,7 +216,7 @@ router.delete('/libraries/:library_name', (req, res) => {
             console.log(err);
             res.status(500).send();
         }
-            console.log(library);
+        console.log(library);
         res.status(200).send();
     });
 });
