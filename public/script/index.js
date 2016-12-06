@@ -39,7 +39,7 @@ function submitLibrary() {
         let existing_library = $('#library_drop option').val();
         let libval = $('#library_name').val().trim();
         event.preventDefault();
-        console.log(libval);
+
 
         if (!$.trim(libval) || libval === existing_library) {
             alert('Please enter the name of the library. If an additional library name is needed, please, include the version.');
@@ -60,7 +60,6 @@ function submitLibrary() {
 };
 
 function getLibrary(cbFn) {
-    console.log(cbFn);
     $.ajax({
             url: 'https://node-study-zoverlvx.c9users.io/libraries', // libraries/ + actual name of library?
             dataType: 'json',
@@ -74,10 +73,9 @@ function getLibrary(cbFn) {
 
 function initializeLibraryDropdown() {
     getLibrary((result) => {
-        console.log(result);
         result.forEach((libraryObj) => {
             $('#library_select').append('<option>' + libraryObj.library_name + '</option>')
-        })
+        });
     });
 }
 
@@ -86,8 +84,8 @@ function libraryDropdown(selected_library) {
     $('#library_drop').change((event) => {
         selected_library = $('#library_drop option:selected');
         getMethod(selected_library);
-        $('#method_select').append('<option>' + selected_library.entries[0].method + '</option>')
-    })
+        $('#method_select').append('<option>' + selected_library.method + '</option>')
+    });
 }
 
 //Method doesn't associate to the library on the DOM
@@ -110,11 +108,8 @@ function registerMethodAndDescriptionSubmit() {
     $('#method_submit').submit((event) => {
         let i = 1;
         let libraryval = $('#library_select').val();
-        console.log(libraryval);
         let methodval = $('#method_name').val().trim();
-        console.log(methodval);
         let descriptionval = $('textarea[name="description"]').val().trim();
-        console.log(descriptionval);
         event.preventDefault();
 
 
@@ -173,6 +168,7 @@ function methodDropdown(selected_method) {
     $('#method_drop').change((event) => {
         selected_method = $('#method_drop option:selected');
         getMethod(selected_method);
+        console.log(selected_method);
         //I don't really believe this code. How can one access description through the selected method as an argument? 
         //This doesn't match the Schema itself
         $('#output').append('<p>' + selected_method.entries[0].description + '</p>');
