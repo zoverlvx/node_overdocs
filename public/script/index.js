@@ -1,12 +1,10 @@
 'use strict';
 /* global $ */
 
-// on submit of library, library is added to library dropdown and store in db
-// enter method name in input && enter description for method
-// on submit for method name and description store info in two separate props under the library selected in the dropdown
-// on library select, show method dropdown
-// on method dropdown select, append method and description
-
+// edit the schema to make sure it can only take a string
+// make sure that the method associated to the correct library only shows in the drop down correctly on the DOM
+// make sure deleting the method works - almost there
+// make sure that the description shows up in output on method select
 
 function addLibrary(library_name) {
     let library_post = {
@@ -38,12 +36,13 @@ function submitLibrary() {
 
     $('#library_submit').submit((event) => {
         let i = 1;
+        let existing_library = $('#library_drop option').val();
         let libval = $('#library_name').val().trim();
         event.preventDefault();
         console.log(libval);
 
-        if (!$.trim(libval) /* || libval already exists */ ) {
-            alert('Please enter the name of the library');
+        if (!$.trim(libval) || libval === existing_library) {
+            alert('Please enter the name of the library. If an additional library name is needed, please, include the version.');
         }
         else {
             addLibrary(libval);
@@ -59,12 +58,6 @@ function submitLibrary() {
     });
 
 };
-
-// function editLibrary () {
-//     $('#library_edit').submit((event) => {
-//         let libval = $('#library_name').val().trim();
-//     });
-// }
 
 function getLibrary(cbFn) {
     console.log(cbFn);
@@ -97,6 +90,7 @@ function libraryDropdown(selected_library) {
     })
 }
 
+//Method doesn't associate to the library on the DOM
 
 function addMethodAndDescription(library_name, method_name, description) {
     let method_post = {
@@ -157,26 +151,51 @@ function getMethod(cbFn, selected_library) {
         });
 }
 
-function initializeMethodDropdown() {
-    getMethod((result) => {
+function initializeMethodDropdown(selected_library) { // on library selected
+    selected_library = $('#library_drop option:selected').val();
+    getMethod((result) => { // selected_library
         result.forEach((methodObj) => {
             $('#method_select').append('<option>' + methodObj.entries[0].method + '</option>')
         });
     });
 }
 
+// function libraryDropdown(selected_library) {
+//     $('#library_drop').change((event) => {
+//         selected_library = $('#library_drop option:selected');
+//         getMethod(selected_library);
+//         $('#method_select').append('<option>' + selected_library.entries[0].method + '</option>')
+//     })
+// }
+
+
+function methodDropdown(selected_method) {
+    $('#method_drop').change((event) => {
+        selected_method = $('#method_drop option:selected');
+        getMethod(selected_method);
+        //I don't really believe this code. How can one access description through the selected method as an argument? 
+        //This doesn't match the Schema itself
+        $('#output').append('<p>' + selected_method.entries[0].description + '</p>');
+    });
+}
+
 function deleteLibrary(library_name) {
+    console.log('Here is library_name', library_name);
     $.ajax('/libraries/' + library_name, {
         type: 'DELETE',
-        dataType: 'json'
+        // dataType: 'json'
+    }).done(function() {
+        console.log('Hello', library_name);
+        $('#library_drop option:selected').remove();
     });
 }
 
 function onDeleteLibrary() {
-    let selected_library = $('#library_drop option:selected').val();
-    $('#library_delete').submit((event) => {
-       event.preventDefault();
-       deleteLibrary(selected_library);
+    $('#library_delete').click((event) => {
+        event.preventDefault();
+        let selected_library = $('#library_drop option:selected').val();
+        console.log("Here is selected_library", selected_library);
+        deleteLibrary(selected_library);
     });
 }
 
@@ -199,15 +218,6 @@ function onDeleteLibrary() {
 // take the value name of 'textarea[name="description"]'
 // replace library_name.entries[0].description with the new value...?
 
-// req.body and req.params
-// how to replace the value within an object with a new value
-// 
-
-
-
-//could probably be added to library dropdown
-//on selected library, on selected method ???
-
 
 function initializeDropdowns() {
     initializeLibraryDropdown();
@@ -221,7 +231,6 @@ $(document).ready(() => {
     submitLibrary();
     registerMethodAndDescriptionSubmit(); // other functions 
     updateLibrary();
-    deleteLibrary();
     getLibrary((result) => {
         console.log(result);
     });

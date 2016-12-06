@@ -156,6 +156,8 @@ router.put('/libraries/:library_name/:method', function (req, res) {
     });
 });
 
+//Method doesn't associate to the library on the DOM
+
 router.put('/libraries/:library_name/:method/:description', function (req, res) {
     var description = req.body.entries[0].description; // still, no idea why this is doing this   
     Libraries.findOne({
@@ -170,22 +172,18 @@ router.put('/libraries/:library_name/:method/:description', function (req, res) 
     });
 });
 
-// params - 
-// body -
-// query -
-
-
 //DELETE library and methods
 router.delete('/libraries/:library_name', function (req, res) {
-    var library_name = req.body.library_name;
+    var library_name = req.params.library_name; //body isn't working either
+    console.log(req.params.library_name);
     Libraries.findOneAndRemove({
         library_name: library_name
-    }, function (err) {
+    }, function (err, library) {
         if (err) {
             console.log(err);
             res.status(500).send();
         }
-
+        console.log(library);
         res.status(200).send();
     });
 });
