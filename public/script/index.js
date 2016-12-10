@@ -6,6 +6,11 @@
 // make sure deleting the method works - almost there
 // make sure that the description shows up in output on method select
 
+// need to go function by function
+// what will automatically select the value of the first library 
+// in the dropdown 
+// so that the methods can be appended to the DOM?
+
 function addLibrary(library_name) {
     let library_post = {
         'library_name': library_name
@@ -18,28 +23,27 @@ function addLibrary(library_name) {
     });
 };
 
+//Double-check
 function updateLibrary(library_name, method_update, description_update) {
     let library_put = {
-        'library_name': library_name,
         'method': method_update,
         'description': description_update
     };
     $.ajax('/libraries/' + library_name, {
         type: 'PUT',
-        data: JSON.stringify(library_name),
+        data: JSON.stringify(library_put),
         dataType: 'json',
         contentType: 'application/json'
     });
+    
 }
 
 function submitLibrary() {
-
     $('#library_submit').submit((event) => {
-        let i = 1;
+        event.preventDefault();
+        // let i = 1;
         let existing_library = $('#library_drop option').val();
         let libval = $('#library_name').val().trim();
-        event.preventDefault();
-
 
         if (!$.trim(libval) || libval === existing_library) {
             alert('Please enter the name of the library. If an additional library name is needed, please, include the version.');
@@ -47,13 +51,13 @@ function submitLibrary() {
         else {
             addLibrary(libval);
             $('#library_select').append($('<option>', {
-                value: i,
+                // value: i,
                 text: libval
             }));
         }
 
         libval = $('#library_name').val('');
-        i++;
+       // i++;
 
     });
 
@@ -61,7 +65,7 @@ function submitLibrary() {
 
 function getLibrary(cbFn) {
     $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries', // libraries/ + actual name of library?
+            url: 'https://node-study-zoverlvx.c9users.io/libraries', 
             dataType: 'json',
             type: 'GET',
         })
@@ -74,30 +78,47 @@ function getLibrary(cbFn) {
 function initializeLibraryDropdown() {
     getLibrary((result) => {
         result.forEach((libraryObj) => {
-            $('#library_select').append('<option>' + libraryObj.library_name + '</option>')
+            $('#library_select').append('<option value="' + libraryObj.library_name + '">' + libraryObj.library_name + '</option>');
         });
     });
 }
 
-//on selected library, must append the method dropdown
-function libraryDropdown(selected_library) {
-    $('#library_drop').change((event) => {
-        selected_library = $('#library_drop option:selected');
-        getMethod(selected_library);
-        $('#method_select').append('<option>' + selected_library.method + '</option>')
+function initializeMethodDropdown(selected_library) {
+    selected_library = $('#library_select option:selected'); //option this.value
+    console.log(selected_library.val(), 'Here is the selected library');
+    getMethod(selected_library, (result) => { 
+        result.forEach((methodObj) => {
+            $('#method_select').append('<option value="' + methodObj.entries[0].method + '">' + methodObj.entries[0].method + '</option>')
+        });
     });
 }
 
-//Method doesn't associate to the library on the DOM
 
+//on selected library, must append the method dropdown
+function libraryDropdown(selected_library) {
+  $('#library_select').change((event) => {
+    let selected_library = $(this.value);
+    selected_library.each(initializeMethodDropdown(selected_library));
+  });
+}
+
+// function libraryDropdown(selected_library) {
+//     $('#library_drop').change((event) => {
+//         selected_library = $('#library_drop option:selected');
+//         getMethod(selected_library);
+//         $('#method_select').append('<option>' + selected_library.entries[0].method + '</option>')
+//     })
+// }
+
+//Method doesn't associate to the library on the DOM
 function addMethodAndDescription(library_name, method_name, description) {
-    let method_post = {
+    let method_put = {
         'method': method_name,
         'description': description
     };
     $.ajax('/libraries/' + library_name, {
-        type: 'POST',
-        data: JSON.stringify(method_post),
+        type: 'PUT',
+        data: JSON.stringify(method_put),
         dataType: 'json',
         contentType: 'application/json'
     });
@@ -111,7 +132,6 @@ function registerMethodAndDescriptionSubmit() {
         let methodval = $('#method_name').val().trim();
         let descriptionval = $('textarea[name="description"]').val().trim();
         event.preventDefault();
-
 
         if (!$.trim(methodval) && !$.trim(descriptionval)) {
             alert('Please enter a method name with a description');
@@ -134,34 +154,23 @@ function registerMethodAndDescriptionSubmit() {
 
 };
 
-function getMethod(cbFn, selected_library) {
-    console.log(cbFn);
+function getMethod(selected_library, cbFn) {
+    // console.log(cbFn);
     $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries/' + selected_library,
+            url: 'https://node-study-zoverlvx.c9users.io/libraries/' + 'node.js',
             dataType: 'json',
             type: 'GET'
         })
-        .done((result) => { // might need two different GET method arguments
+        .done((result) => {
+            console.log('Here is the result', result);
+            // 
+            // might need two different GET method arguments
             cbFn(result);
+        })
+        .fail((err) => {
+            console.log(err);
         });
 }
-
-function initializeMethodDropdown(selected_library) { // on library selected
-    selected_library = $('#library_drop option:selected').val();
-    getMethod((result) => { // selected_library
-        result.forEach((methodObj) => {
-            $('#method_select').append('<option>' + methodObj.entries[0].method + '</option>')
-        });
-    });
-}
-
-// function libraryDropdown(selected_library) {
-//     $('#library_drop').change((event) => {
-//         selected_library = $('#library_drop option:selected');
-//         getMethod(selected_library);
-//         $('#method_select').append('<option>' + selected_library.entries[0].method + '</option>')
-//     })
-// }
 
 
 function methodDropdown(selected_method) {
@@ -226,7 +235,7 @@ $(document).ready(() => {
     initializeDropdowns();
     submitLibrary();
     registerMethodAndDescriptionSubmit(); // other functions 
-    updateLibrary();
+    //updateLibrary();
     getLibrary((result) => {
         console.log(result);
     });

@@ -18,18 +18,15 @@ const mongoose = require('mongoose');
 let librarySchema = new mongoose.Schema({
     library_name: {
         type: String,
-        index: true,
         unique: true,
         required: true
     },
     entries: [{
         method: {
-            type: String,
-            required: true
+            type: String
         },
         description: {
-            type: String,
-            required: true
+            type: String
         }
     }]
 });
