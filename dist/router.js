@@ -167,7 +167,7 @@ router.delete('/libraries/:library_name', function (req, res) {
     });
 });
 
-//DELETE method and description // needs more info
+//DELETE method and description // Can't tell if this is completely working because I can't GET methods to DOM
 router.delete('/libraries/:library_name/:method', function (req, res) {
     var method = req.body.method;
     Libraries.findOneAndRemove({

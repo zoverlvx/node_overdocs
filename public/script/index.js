@@ -1,15 +1,17 @@
 'use strict';
 /* global $ */
 
-// edit the schema to make sure it can only take a string
-// make sure that the method associated to the correct library only shows in the drop down correctly on the DOM
-// make sure deleting the method works - almost there
-// make sure that the description shows up in output on method select
+function getLibrary(cbFn) {
+    $.ajax({
+            url: 'https://node-study-zoverlvx.c9users.io/libraries', 
+            dataType: 'json',
+            type: 'GET',
+        })
+        .done((result) => {
+            cbFn(result);
 
-// need to go function by function
-// what will automatically select the value of the first library 
-// in the dropdown 
-// so that the methods can be appended to the DOM?
+        });
+}
 
 function addLibrary(library_name) {
     let library_post = {
@@ -23,7 +25,6 @@ function addLibrary(library_name) {
     });
 };
 
-//Double-check
 function updateLibrary(library_name, method_update, description_update) {
     let library_put = {
         'method': method_update,
@@ -36,6 +37,16 @@ function updateLibrary(library_name, method_update, description_update) {
         contentType: 'application/json'
     });
     
+}
+
+function deleteLibrary(library_name) {
+    console.log('Here is library_name', library_name);
+    $.ajax('/libraries/' + library_name, {
+        type: 'DELETE'
+    }).done(function() {
+        console.log('Hello', library_name);
+        $('#library_drop option:selected').remove();
+    });
 }
 
 function submitLibrary() {
@@ -63,18 +74,6 @@ function submitLibrary() {
 
 };
 
-function getLibrary(cbFn) {
-    $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries', 
-            dataType: 'json',
-            type: 'GET',
-        })
-        .done((result) => {
-            cbFn(result);
-
-        });
-}
-
 function initializeLibraryDropdown() {
     getLibrary((result) => {
         result.forEach((libraryObj) => {
@@ -83,32 +82,58 @@ function initializeLibraryDropdown() {
     });
 }
 
-function initializeMethodDropdown(selected_library) {
-    selected_library = $('#library_select option:selected'); //option this.value
-    console.log(selected_library.val(), 'Here is the selected library');
-    getMethod(selected_library, (result) => { 
-        result.forEach((methodObj) => {
-            $('#method_select').append('<option value="' + methodObj.entries[0].method + '">' + methodObj.entries[0].method + '</option>')
-        });
-    });
-}
-
-
 //on selected library, must append the method dropdown
 function libraryDropdown(selected_library) {
-  $('#library_select').change((event) => {
-    let selected_library = $(this.value);
-    selected_library.each(initializeMethodDropdown(selected_library));
+  $('#library_select').change((event) => { // change works on select, input, or textarea
+    selected_library = $(this.value);
+    selected_library.each(initializeMethodDropdown(selected_library)); // this function is dependent on this primarily
   });
 }
 
-// function libraryDropdown(selected_library) {
-//     $('#library_drop').change((event) => {
-//         selected_library = $('#library_drop option:selected');
-//         getMethod(selected_library);
-//         $('#method_select').append('<option>' + selected_library.entries[0].method + '</option>')
-//     })
+function onDeleteLibrary() {
+    $('#library_delete').click((event) => {
+        event.preventDefault();
+        let selected_library = $('#library_drop option:selected').val();
+        console.log("Here is selected_library", selected_library);
+        deleteLibrary(selected_library);
+    });
+}
+
+function getMethod(selected_library, cbFn) {
+    
+    $.ajax({
+            url: 'https://node-study-zoverlvx.c9users.io/libraries/' + selected_library,
+            dataType: 'json',
+            type: 'GET'
+        })
+        .done((result) => {
+            console.log('Here is the result', result);
+            cbFn(result);
+        })
+        .fail((err) => {
+            console.log(err);
+        });
+}
+
+// function deleteLibrary(library_name) {
+//     console.log('Here is library_name', library_name);
+//     $.ajax('/libraries/' + library_name, {
+//         type: 'DELETE',
+//         // dataType: 'json'
+//     }).done(function() {
+//         console.log('Hello', library_name);
+//         $('#library_drop option:selected').remove();
+//     });
 // }
+
+function deleteMethodAndDescription (selected_library) {
+    $.ajax('/libraries/' + selected_library, {
+        type: 'DELETE',
+       // dataType: 'json',
+    }).done(() => {
+        $('#method_drop option:selected').remove();
+    })
+}
 
 //Method doesn't associate to the library on the DOM
 function addMethodAndDescription(library_name, method_name, description) {
@@ -154,24 +179,16 @@ function registerMethodAndDescriptionSubmit() {
 
 };
 
-function getMethod(selected_library, cbFn) {
-    // console.log(cbFn);
-    $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries/' + 'node.js',
-            dataType: 'json',
-            type: 'GET'
-        })
-        .done((result) => {
-            console.log('Here is the result', result);
-            // 
-            // might need two different GET method arguments
-            cbFn(result);
-        })
-        .fail((err) => {
-            console.log(err);
+//needs fixed
+function initializeMethodDropdown(selected_library) {
+    selected_library = $('#library_select option:selected'); //option this.value
+    console.log(selected_library.val(), 'Here is the selected library');
+    getMethod(selected_library, (result) => { 
+        result.forEach((methodObj) => {
+            $('#method_select').append('<option value="' + methodObj.entries[0].method + '">' + methodObj.entries[0].method + '</option>')
         });
+    });
 }
-
 
 function methodDropdown(selected_method) {
     $('#method_drop').change((event) => {
@@ -184,25 +201,7 @@ function methodDropdown(selected_method) {
     });
 }
 
-function deleteLibrary(library_name) {
-    console.log('Here is library_name', library_name);
-    $.ajax('/libraries/' + library_name, {
-        type: 'DELETE',
-        // dataType: 'json'
-    }).done(function() {
-        console.log('Hello', library_name);
-        $('#library_drop option:selected').remove();
-    });
-}
 
-function onDeleteLibrary() {
-    $('#library_delete').click((event) => {
-        event.preventDefault();
-        let selected_library = $('#library_drop option:selected').val();
-        console.log("Here is selected_library", selected_library);
-        deleteLibrary(selected_library);
-    });
-}
 
 // PSEUDO Code
 
