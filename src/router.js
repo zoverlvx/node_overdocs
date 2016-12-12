@@ -14,7 +14,6 @@ app.use(jsonParser);
 
 //GET all libraries
 router.get('/libraries', (req, res) => {
-    console.log(req.body);
 
     Libraries.find((err, library_name) => {
         if (err) {
@@ -26,31 +25,55 @@ router.get('/libraries', (req, res) => {
     });
 });
 
-//GET library
-router.get('/libraries/:library_name/', (req, res) => {
-    console.log('Here is GET');
-    Libraries.findOne({
+//GET singular library
+router.get('/libraries/:library_name', (req, res) => {
+    let query = Libraries.where({
         library_name: req.params.library_name
-    }), (err, method) => {
-        if (typeof library_name === 'undefined') {
+    });
+
+    query.findOne((err, library) => {
+        if (err) {
             return res.status(404).json({
                 status: 'error'
             });
         }
-        else if (err) {
-            return res.status(500).json({
-                message: 'Library not found.'
-            });
+        else {
+            res.json(library)
         }
-        console.log('Here is GET/libraries');
-        res.json(method);
-    }
+    });
 });
 
+// router.get('/libraries/:library_name/', (req, res) => {
+//     Libraries.find((err, library) => {
+//         if (err) {
+//             return res.status(404).json({
+//                 status: 'error'
+//             });
+//         } else {
+//             res.json(library);
+//         }
+//     }
+//     }), (err, method) => {
+//         console.log(method);
+//         if (typeof library_name === 'undefined') {
+//             return res.status(404).json({
+//                 status: 'error'
+//             });
+//         }
+//         else if (err) { // could probably combine if and else if statements because
+//         // there's no special reason to keep them separate
+//             return res.status(500).json({
+//                 message: 'Library not found.'
+//             });
+//         }
+//         console.log('Here is GET/libraries');
+//         res.json(method);
+//     }
+// });
+
 //GET method
-router.get('/libraries/:library_name/:method/', (req, res) => {
-    console.log('Getting methods');
-    console.log(req.params);
+router.get('/libraries/:library_name/', (req, res) => { // deleted :method
+    console.log('Got methods');
     Libraries.findOne({
         method: req.params.method
     }), (err, description) => {
@@ -66,13 +89,15 @@ router.get('/libraries/:library_name/:method/', (req, res) => {
             });
         }
         res.json(description);
+        console.log(description);
     }
 });
 
+//GET Method edit
+// router.get()
+
 //POST libraries
 router.post('/libraries', (req, res) => {
-    console.log(req.body);
-    console.log('This is params', req.params);
     Libraries.create({
         library_name: req.body.library_name
     }, (err, library) => {
@@ -88,20 +113,20 @@ router.post('/libraries', (req, res) => {
             });
         }
         res.status(201).json(library);
+        console.log(library);
     });
 });
 
 //PUT method and description to library
 router.put('/libraries/:library_name', (req, res) => {
-    console.log(req.body);
     Libraries.findOneAndUpdate({
         library_name: req.params.library_name,
     }, {
         $push: {
-            entries: [{
+            entries: {
                 method: req.body.method,
                 description: req.body.description
-            }]
+            }
         }
     }, (err, library) => {
 
@@ -161,7 +186,7 @@ router.delete('/libraries/:library_name', (req, res) => {
     console.log(req.params.library_name);
     Libraries.findOneAndRemove({
         library_name: library_name
-        //doesn't delete the associated methods and descriptions
+            //doesn't delete the associated methods and descriptions
     }, (err, library) => {
         if (err) {
             console.log(err);
@@ -177,7 +202,7 @@ router.delete('/libraries/:library_name/:method', (req, res) => {
     let method = req.body.method;
     Libraries.findOneAndRemove({
         method: method
-        // and description
+            // and description
     }, (err) => {
         if (err) {
             console.log(err);

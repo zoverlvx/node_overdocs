@@ -3,7 +3,7 @@
 
 function getLibrary(cbFn) {
     $.ajax({
-            url: 'https://node-study-zoverlvx.c9users.io/libraries', 
+            url: 'https://node-study-zoverlvx.c9users.io/libraries',
             dataType: 'json',
             type: 'GET',
         })
@@ -36,7 +36,7 @@ function updateLibrary(library_name, method_update, description_update) {
         dataType: 'json',
         contentType: 'application/json'
     });
-    
+
 }
 
 function deleteLibrary(library_name) {
@@ -44,7 +44,6 @@ function deleteLibrary(library_name) {
     $.ajax('/libraries/' + library_name, {
         type: 'DELETE'
     }).done(function() {
-        console.log('Hello', library_name);
         $('#library_drop option:selected').remove();
     });
 }
@@ -52,7 +51,6 @@ function deleteLibrary(library_name) {
 function submitLibrary() {
     $('#library_submit').submit((event) => {
         event.preventDefault();
-        // let i = 1;
         let existing_library = $('#library_drop option').val();
         let libval = $('#library_name').val().trim();
 
@@ -62,14 +60,11 @@ function submitLibrary() {
         else {
             addLibrary(libval);
             $('#library_select').append($('<option>', {
-                // value: i,
                 text: libval
             }));
         }
 
         libval = $('#library_name').val('');
-       // i++;
-
     });
 
 };
@@ -83,11 +78,12 @@ function initializeLibraryDropdown() {
 }
 
 //on selected library, must append the method dropdown
-function libraryDropdown(selected_library) {
-  $('#library_select').change((event) => { // change works on select, input, or textarea
-    selected_library = $(this.value);
-    selected_library.each(initializeMethodDropdown(selected_library)); // this function is dependent on this primarily
-  });
+function libraryDropdown() {
+    $('#library_select').change((event) => { // change works on select, input, or textarea
+        $('#method_select').empty();
+        console.log('This is the event: ', event.target.value);
+        initializeMethodDropdown(event.target.value); // important function
+    });
 }
 
 function onDeleteLibrary() {
@@ -100,14 +96,13 @@ function onDeleteLibrary() {
 }
 
 function getMethod(selected_library, cbFn) {
-    
+
     $.ajax({
             url: 'https://node-study-zoverlvx.c9users.io/libraries/' + selected_library,
             dataType: 'json',
             type: 'GET'
         })
         .done((result) => {
-            console.log('Here is the result', result);
             cbFn(result);
         })
         .fail((err) => {
@@ -115,21 +110,10 @@ function getMethod(selected_library, cbFn) {
         });
 }
 
-// function deleteLibrary(library_name) {
-//     console.log('Here is library_name', library_name);
-//     $.ajax('/libraries/' + library_name, {
-//         type: 'DELETE',
-//         // dataType: 'json'
-//     }).done(function() {
-//         console.log('Hello', library_name);
-//         $('#library_drop option:selected').remove();
-//     });
-// }
-
-function deleteMethodAndDescription (selected_library) {
+function deleteMethodAndDescription(selected_library) {
     $.ajax('/libraries/' + selected_library, {
         type: 'DELETE',
-       // dataType: 'json',
+        // dataType: 'json',
     }).done(() => {
         $('#method_drop option:selected').remove();
     })
@@ -181,14 +165,19 @@ function registerMethodAndDescriptionSubmit() {
 
 //needs fixed
 function initializeMethodDropdown(selected_library) {
-    selected_library = $('#library_select option:selected'); //option this.value
-    console.log(selected_library.val(), 'Here is the selected library');
-    getMethod(selected_library, (result) => { 
-        result.forEach((methodObj) => {
-            $('#method_select').append('<option value="' + methodObj.entries[0].method + '">' + methodObj.entries[0].method + '</option>')
+    getMethod(selected_library, (result) => {
+        result.entries.forEach((methodObj) => {
+            $('#method_select').append('<option value="' + methodObj.method + '">' + methodObj.method + '</option>')
         });
     });
 }
+
+// function libraryDropdown() {
+//   $('#library_select').change((event) => {// change works on select, input, or textarea
+//     console.log('This is the event: ', event.target.value);
+//     initializeMethodDropdown(event.target.value); // important function
+//   });
+// }
 
 function methodDropdown(selected_method) {
     $('#method_drop').change((event) => {
@@ -198,6 +187,14 @@ function methodDropdown(selected_method) {
         //I don't really believe this code. How can one access description through the selected method as an argument? 
         //This doesn't match the Schema itself
         $('#output').append('<p>' + selected_method.entries[0].description + '</p>');
+    });
+}
+
+function onDeleteMethod(selected_method) {
+    $('method_delete').click((event) => {
+        event.preventDefault();
+        selected_method = $('method_drop option:selected').val();
+        deleteMethodAndDescription();
     });
 }
 

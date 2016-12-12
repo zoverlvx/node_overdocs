@@ -13,7 +13,6 @@ app.use(jsonParser);
 
 //GET all libraries
 router.get('/libraries', function (req, res) {
-    console.log(req.body);
 
     Libraries.find(function (err, library_name) {
         if (err) {
@@ -25,30 +24,55 @@ router.get('/libraries', function (req, res) {
     });
 });
 
-//GET library
-router.get('/libraries/:library_name/', function (req, res) {
-    console.log('Here is GET');
-    Libraries.findOne({
+//GET singular library
+router.get('/libraries/:library_name', function (req, res) {
+    var query = Libraries.where({
         library_name: req.params.library_name
-    }), function (err, method) {
-        if (typeof library_name === 'undefined') {
+    });
+
+    query.findOne(function (err, library) {
+        if (err) {
             return res.status(404).json({
                 status: 'error'
             });
-        } else if (err) {
-            return res.status(500).json({
-                message: 'Library not found.'
-            });
+        } else {
+            res.json(library);
         }
-        console.log('Here is GET/libraries');
-        res.json(method);
-    };
+    });
 });
 
+// router.get('/libraries/:library_name/', (req, res) => {
+//     Libraries.find((err, library) => {
+//         if (err) {
+//             return res.status(404).json({
+//                 status: 'error'
+//             });
+//         } else {
+//             res.json(library);
+//         }
+//     }
+//     }), (err, method) => {
+//         console.log(method);
+//         if (typeof library_name === 'undefined') {
+//             return res.status(404).json({
+//                 status: 'error'
+//             });
+//         }
+//         else if (err) { // could probably combine if and else if statements because
+//         // there's no special reason to keep them separate
+//             return res.status(500).json({
+//                 message: 'Library not found.'
+//             });
+//         }
+//         console.log('Here is GET/libraries');
+//         res.json(method);
+//     }
+// });
+
 //GET method
-router.get('/libraries/:library_name/:method/', function (req, res) {
-    console.log('Getting methods');
-    console.log(req.params);
+router.get('/libraries/:library_name/', function (req, res) {
+    // deleted :method
+    console.log('Got methods');
     Libraries.findOne({
         method: req.params.method
     }), function (err, description) {
@@ -63,13 +87,15 @@ router.get('/libraries/:library_name/:method/', function (req, res) {
             });
         }
         res.json(description);
+        console.log(description);
     };
 });
 
+//GET Method edit
+// router.get()
+
 //POST libraries
 router.post('/libraries', function (req, res) {
-    console.log(req.body);
-    console.log('This is params', req.params);
     Libraries.create({
         library_name: req.body.library_name
     }, function (err, library) {
@@ -84,20 +110,20 @@ router.post('/libraries', function (req, res) {
             });
         }
         res.status(201).json(library);
+        console.log(library);
     });
 });
 
 //PUT method and description to library
 router.put('/libraries/:library_name', function (req, res) {
-    console.log(req.body);
     Libraries.findOneAndUpdate({
         library_name: req.params.library_name
     }, {
         $push: {
-            entries: [{
+            entries: {
                 method: req.body.method,
                 description: req.body.description
-            }]
+            }
         }
     }, function (err, library) {
 

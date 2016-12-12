@@ -22,6 +22,7 @@ let librarySchema = new mongoose.Schema({
         required: true
     },
     entries: [{
+        _id: false,
         method: {
             type: String
         },
