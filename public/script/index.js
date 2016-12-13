@@ -77,7 +77,7 @@ function initializeLibraryDropdown() {
     });
 }
 
-//on selected library, must append the method dropdown
+
 function libraryDropdown() {
     $('#library_select').change((event) => { // change works on select, input, or textarea
         $('#method_select').empty();
@@ -90,7 +90,6 @@ function onDeleteLibrary() {
     $('#library_delete').click((event) => {
         event.preventDefault();
         let selected_library = $('#library_drop option:selected').val();
-        console.log("Here is selected_library", selected_library);
         deleteLibrary(selected_library);
     });
 }
@@ -172,23 +171,21 @@ function initializeMethodDropdown(selected_library) {
     });
 }
 
-// function libraryDropdown() {
-//   $('#library_select').change((event) => {// change works on select, input, or textarea
-//     console.log('This is the event: ', event.target.value);
-//     initializeMethodDropdown(event.target.value); // important function
-//   });
-// }
-
-function methodDropdown(selected_method) {
-    $('#method_drop').change((event) => {
-        selected_method = $('#method_drop option:selected');
-        getMethod(selected_method);
-        console.log(selected_method);
-        //I don't really believe this code. How can one access description through the selected method as an argument? 
-        //This doesn't match the Schema itself
-        $('#output').append('<p>' + selected_method.entries[0].description + '</p>');
+function methodDropdown(selected_method){ //doesn't look right
+    getMethod(selected_method, (event) => {
+       $('#output').empty();
+       $('#output').append('<p>' + selected_method.event.description + '</p>')
     });
 }
+    
+// function libraryDropdown() {
+//     $('#library_select').change((event) => { // change works on select, input, or textarea
+//         $('#method_select').empty();
+//         console.log('This is the event: ', event.target.value);
+//         initializeMethodDropdown(event.target.value); // important function
+//     });
+// }
+
 
 function onDeleteMethod(selected_method) {
     $('method_delete').click((event) => {

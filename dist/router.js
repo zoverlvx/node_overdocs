@@ -63,9 +63,6 @@ router.get('/libraries/:library_name/', function (req, res) {
     };
 });
 
-//GET Method edit
-// router.get()
-
 //POST libraries
 router.post('/libraries', function (req, res) {
     Libraries.create({
@@ -129,7 +126,7 @@ router.delete('/libraries/:library_name', function (req, res) {
 router.delete('/libraries/:library_name/:method', function (req, res) {
     var method = req.body.method;
     var description = req.body.description;
-    Libraries.find().remove({
+    Libraries.find().remove({ //tried using just .remove() as well
         entries: {
             method: method,
             description: description
