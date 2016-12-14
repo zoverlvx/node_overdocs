@@ -144,7 +144,7 @@ router.delete('/libraries/:library_name', (req, res) => {
 });
 
 router.delete('libraries/:library_name/:method', (req, res) => {
-    Libraries.find().remove({ // tried findOneAndRemove ... at this point I've tried everything
+    Libraries.remove({ 
         entries: [{
             method: req.body.method,
             description: req.body.description
@@ -158,6 +158,22 @@ router.delete('libraries/:library_name/:method', (req, res) => {
         res.status(200).send();
     });
 });
+
+// router.delete('libraries/:library_name/:method', (req, res) => {
+//     Libraries.find().remove({ 
+//         entries: [{
+//             method: req.body.method,
+//             description: req.body.description
+//         }]
+//     }, (err, deletedMethod) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send();
+//         }
+//         console.log(deletedMethod);
+//         res.status(200).send();
+//     });
+// });
 
 //DELETE method and description // First attempt
 // router.delete('/libraries/:library_name/:method', (req, res) => {
