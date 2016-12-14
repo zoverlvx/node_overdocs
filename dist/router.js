@@ -41,27 +41,44 @@ router.get('/libraries/:library_name', function (req, res) {
     });
 });
 
-//GET method
-router.get('/libraries/:library_name/', function (req, res) {
-    // deleted :method
-    console.log('Got methods');
-    Libraries.findOne({
-        method: req.params.method
-    }), function (err, description) {
+//GET singular method
+router.get('/libraries/:library_name', function (req, res) {
+    var query = Libraries.where({
+        method: req.body.method
+    });
 
-        if (typeof method === 'undefined') {
+    query.findOne(function (err, method) {
+        if (err) {
             return res.status(404).json({
                 status: 'error'
             });
-        } else if (err) {
-            return res.status(500).json({
-                message: 'Method not found.'
-            });
+        } else {
+            res.json(method);
         }
-        res.json(description);
-        console.log(description);
-    };
+    });
 });
+
+//GET method
+// router.get('/libraries/:library_name/', (req, res) => { // deleted :method
+//     console.log('Got methods');
+//     Libraries.findOne({
+//         method: req.params.method
+//     }), (err, description) => {
+
+//         if (typeof method === 'undefined') {
+//             return res.status(404).json({
+//                 status: 'error'
+//             });
+//         }
+//         else if (err) {
+//             return res.status(500).json({
+//                 message: 'Method not found.'
+//             });
+//         }
+//         res.json(description);
+//         console.log(description);
+//     }
+// });
 
 //POST libraries
 router.post('/libraries', function (req, res) {
@@ -107,7 +124,7 @@ router.put('/libraries/:library_name', function (req, res) {
     });
 });
 
-//DELETE library and methods // works beautifully
+//DELETE library and methods 
 router.delete('/libraries/:library_name', function (req, res) {
     var library_name = req.params.library_name;
     Libraries.findOneAndRemove({
@@ -122,23 +139,37 @@ router.delete('/libraries/:library_name', function (req, res) {
     });
 });
 
-//DELETE method and description // Can't tell if this is completely working because I can't GET methods to DOM
-router.delete('/libraries/:library_name/:method', function (req, res) {
-    var method = req.body.method;
-    var description = req.body.description;
-    Libraries.find().remove({ //tried using just .remove() as well
-        entries: {
-            method: method,
-            description: description
-        }
+//DELETE method and description // NOT WORKING
+// router.delete('/libraries/:library_name/:method', (req, res) => {
+//     let method = req.body.method;
+//     let description = req.body.description;
+//     Libraries.find().remove({ //tried using just .remove() as well
+//         entries: {
+//             method: method,
+//             description: description
+//         },
 
-    }, function (err) {
+//     }, (err) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send();
+//         }
+
+//         res.status(200).send();
+//     });
+// });
+
+router.delete('/libraries/:library_name/:method', function (req, res) {
+    Libraries.find({
+        method: req.body.method,
+        description: req.body.description
+    }, function (err, deletedMethod) {
         if (err) {
             console.log(err);
-            res.status(500).send();
         }
-
-        res.status(200).send();
+        Libraries.remove(function (err) {
+            console.log(err);
+        });
     });
 });
 
