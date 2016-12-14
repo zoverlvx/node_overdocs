@@ -126,9 +126,8 @@ router.put('/libraries/:library_name', function (req, res) {
 
 //DELETE library and methods 
 router.delete('/libraries/:library_name', function (req, res) {
-    var library_name = req.params.library_name;
     Libraries.findOneAndRemove({
-        library_name: library_name
+        library_name: req.params.library_name
     }, function (err, library) {
         if (err) {
             console.log(err);
@@ -139,7 +138,23 @@ router.delete('/libraries/:library_name', function (req, res) {
     });
 });
 
-//DELETE method and description // NOT WORKING
+router.delete('libraries/:library_name/:method', function (req, res) {
+    Libraries.find().remove({ // tried findOneAndRemove ... at this point I've tried everything
+        entries: [{
+            method: req.body.method,
+            description: req.body.description
+        }]
+    }, function (err, deletedMethod) {
+        if (err) {
+            console.log(err);
+            res.status(500).send();
+        }
+        console.log(deletedMethod);
+        res.status(200).send();
+    });
+});
+
+//DELETE method and description // First attempt
 // router.delete('/libraries/:library_name/:method', (req, res) => {
 //     let method = req.body.method;
 //     let description = req.body.description;
@@ -159,19 +174,22 @@ router.delete('/libraries/:library_name', function (req, res) {
 //     });
 // });
 
-router.delete('/libraries/:library_name/:method', function (req, res) {
-    Libraries.find({
-        method: req.body.method,
-        description: req.body.description
-    }, function (err, deletedMethod) {
-        if (err) {
-            console.log(err);
-        }
-        Libraries.remove(function (err) {
-            console.log(err);
-        });
-    });
-});
+// second attempt
+// router.delete('/libraries/:library_name/:method', (req, res) => {
+//     Libraries.findOne({
+//         entries: {
+//             method: req.body.method,
+//             description: req.body.description
+//         }
+//     }, (err, deletedMethod) => {
+//         if (err) {
+//             console.log(err);
+//         }
+//         Libraries.remove((err) => {
+//             console.log(err);
+//         });
+//     });
+// });
 
 module.exports = router;
 //# sourceMappingURL=router.js.map
