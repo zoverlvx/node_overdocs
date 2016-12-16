@@ -40,7 +40,6 @@ function updateLibrary(library_name, method_update, description_update) {
 }
 
 function deleteLibrary(library_name) {
-    console.log('Here is library_name', library_name);
     $.ajax('/libraries/' + library_name, {
         type: 'DELETE'
     }).done(function() {
@@ -109,16 +108,23 @@ function getMethod(selected_library, cbFn) {
         });
 }
 
-function deleteMethodAndDescription(selected_library) {
-    $.ajax('/libraries/' + selected_library, {
-        type: 'DELETE',
-        // dataType: 'json',
-    }).done(() => {
+// function deleteLibrary(library_name) {
+//     $.ajax('/libraries/' + library_name, {
+//         type: 'DELETE'
+//     }).done(function() {
+//         $('#library_drop option:selected').remove();
+//     });
+// }
+
+function deleteMethodAndDescription(selected_library, selected_method) {
+    console.log(selected_library, selected_method);
+    $.ajax('/libraries/' + selected_library + '/' + selected_method, {
+        type: 'DELETE'
+    }).done(function() {
         $('#method_drop option:selected').remove();
-    })
+    });
 }
 
-//Method doesn't associate to the library on the DOM
 function addMethodAndDescription(library_name, method_name, description) {
     let method_put = {
         'method': method_name,
@@ -130,7 +136,6 @@ function addMethodAndDescription(library_name, method_name, description) {
         dataType: 'json',
         contentType: 'application/json'
     });
-
 };
 
 function registerMethodAndDescriptionSubmit() {
@@ -187,11 +192,12 @@ function methodDropdown(selected_method){ //doesn't look right
 // }
 
 
-function onDeleteMethod(selected_method) {
-    $('method_delete').click((event) => {
+function onDeleteMethod() {
+    $('#method_delete').click((event) => {
         event.preventDefault();
-        selected_method = $('method_drop option:selected').val();
-        deleteMethodAndDescription();
+        let selected_library = $('#library_drop option:selected').val();
+        let selected_method = $('#method_drop option:selected').val();
+        deleteMethodAndDescription(selected_library, selected_method);
     });
 }
 
@@ -225,15 +231,14 @@ function initializeDropdowns() {
 
 $(document).ready(() => {
     onDeleteLibrary();
+    onDeleteMethod();
     initializeDropdowns();
     submitLibrary();
-    registerMethodAndDescriptionSubmit(); // other functions 
-    //updateLibrary();
+    registerMethodAndDescriptionSubmit();
     getLibrary((result) => {
         console.log(result);
     });
     addLibrary();
     libraryDropdown();
-    addMethodAndDescription(); //('ggg', 'new method', 'new description'); //play around with this line
-    // can the UI/an event call addMethodAndDescription
+    addMethodAndDescription(); 
 });

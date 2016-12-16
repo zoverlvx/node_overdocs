@@ -44,11 +44,10 @@ router.get('/libraries/:library_name', (req, res) => {
 });
 
 //GET singular method
-router.get('/libraries/:library_name', (req, res) => {
+router.get('/libraries/:library_name/:method', (req, res) => {
     let query = Libraries.where({
-        method: req.body.method
+        method: req.params.method
     });
-
     query.findOne((err, method) => {
         if (err) {
             return res.status(404).json({
@@ -143,21 +142,57 @@ router.delete('/libraries/:library_name', (req, res) => {
     });
 });
 
+//DELETE methods and descriptions
 router.delete('libraries/:library_name/:method', (req, res) => {
-    Libraries.remove({ 
-        entries: [{
-            method: req.body.method,
-            description: req.body.description
-        }]
-    }, (err, deletedMethod) => {
+    console.log('Delete method');
+    Libraries.findOneAndRemove({
+        entries: {
+            method: req.params.method,
+            description: req.params.description
+        }
+    }, (err, method) => {
         if (err) {
             console.log(err);
             res.status(500).send();
         }
-        console.log(deletedMethod);
+        console.log(method);
         res.status(200).send();
     });
 });
+
+//DELETE methods and descriptions
+// router.delete('libraries/:library_name/:method', (req, res) => {
+//     Libraries.find({
+//         entries: {
+//             method: req.params.method,
+//             description: req.params.description
+//         }
+
+//     }).remove(), (err, deletedMethod) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send();
+//         }
+//         console.log(deletedMethod);
+//         res.status(200).send();
+//     }
+// });
+
+// router.delete('libraries/:library_name', (req, res) => {
+//     Libraries.remove({ 
+//         entries: [{
+//             method: req.body.method,
+//             description: req.body.description
+//         }]
+//     }, (err, deletedMethod) => {
+//         if (err) {
+//             console.log(err);
+//             res.status(500).send();
+//         }
+//         console.log(deletedMethod);
+//         res.status(200).send();
+//     });
+// });
 
 // router.delete('libraries/:library_name/:method', (req, res) => {
 //     Libraries.find().remove({ 
